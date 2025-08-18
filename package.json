@@ -1,7 +1,7 @@
 {
-  "name": "developer-portfolio",
+  "name": "jennytran-portfolio",
   "version": "1.0.0",
-  "description": "Interactive 3D Portfolio Website for Software and Game Developer",
+  "description": "Interactive 3D Portfolio Website for Jenny Tran",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "three": "^0.158.0"
   },
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "terser": "^5.43.1",
     "vite": "^5.0.0"
   }

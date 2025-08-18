@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenny Tran</title>
+    <meta name="description" content="Interactive portfolio showcasing software and game development projects with 3D elements and animations">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="module" crossorigin src="/assets/index-DG-mTOyI.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/three-CIce-lgz.js">
+  <link rel="modulepreload" crossorigin href="/assets/gsap-CL1SgVcg.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-CpVypqLj.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">DEV</span>
+                <div class="logo-cube"></div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#timeline" class="nav-link">Timeline</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <canvas id="hero-canvas"></canvas>
+            <div class="cyber-grid"></div>
+            <div class="cyber-lines"></div>
+        </div>
+        <div class="hero-content">
+                            <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-line cyber-text">Hello, I'm</span>
+                        <span class="title-name">Jenny</span>
+                    </h1>
+                </div>
+                <div class="hero-visual">
+                    <!-- 3D Canvas will be centered here -->
+                </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+            <span class="scroll-text">Scroll to explore</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro">
+                        I'm a passionate developer with expertise in both software development and game creation. 
+                        My journey in technology has been driven by curiosity and a desire to build meaningful experiences.
+                    </p>
+                    <div class="about-details">
+                        <div class="detail-item">
+                            <i class="fas fa-code"></i>
+                            <div>
+                                <h4>Software Development</h4>
+                                <p>Full-stack development, web applications, and software solutions</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-gamepad"></i>
+                            <div>
+                                <h4>Game Development</h4>
+                                <p>Interactive games, 3D graphics, and immersive experiences</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <div>
+                                <h4>Innovation</h4>
+                                <p>Creative problem-solving and cutting-edge technology</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="about-card">
+                        <div class="card-content">
+                            <h3>Experience</h3>
+                            <div class="experience-item">
+                                <span class="year">2020 - Present</span>
+                                <span class="role">Senior Developer</span>
+                            </div>
+                            <div class="experience-item">
+                                <span class="year">2018 - 2020</span>
+                                <span class="role">Game Developer</span>
+                            </div>
+                            <div class="experience-item">
+                                <span class="year">2016 - 2018</span>
+                                <span class="role">Junior Developer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="timeline">
+        <div class="container">
+            <h2 class="section-title">Experience Timeline</h2>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024</div>
+                        <h3>Senior Software Developer</h3>
+                        <p>Leading development of enterprise applications and mentoring junior developers</p>
+                        <div class="timeline-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">AWS</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022</div>
+                        <h3>Game Developer</h3>
+                        <p>Developed mobile games and VR experiences using Unity and Unreal Engine</p>
+                        <div class="timeline-tech">
+                            <span class="tech-tag">Unity</span>
+                            <span class="tech-tag">C#</span>
+                            <span class="tech-tag">VR</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020</div>
+                        <h3>Full-Stack Developer</h3>
+                        <p>Built web applications and APIs for various clients and industries</p>
+                        <div class="timeline-tech">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018</div>
+                        <h3>Junior Developer</h3>
+                        <p>Started career developing web applications and learning modern technologies</p>
+                        <div class="timeline-tech">
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">PHP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Skills & Technologies</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-items">
+                        <div class="skill-item" data-skill="JavaScript">
+                            <div class="skill-icon">JS</div>
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="Python">
+                            <div class="skill-icon">PY</div>
+                            <span class="skill-name">Python</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="C#">
+                            <div class="skill-icon">C#</div>
+                            <span class="skill-name">C#</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="C++">
+                            <div class="skill-icon">C++</div>
+                            <span class="skill-name">C++</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="75"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Game Development</h3>
+                    <div class="skill-items">
+                        <div class="skill-item" data-skill="Unity">
+                            <div class="skill-icon">U</div>
+                            <span class="skill-name">Unity</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="Unreal">
+                            <div class="skill-icon">UE</div>
+                            <span class="skill-name">Unreal Engine</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="OpenGL">
+                            <div class="skill-icon">GL</div>
+                            <span class="skill-name">OpenGL</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="70"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Web Technologies</h3>
+                    <div class="skill-items">
+                        <div class="skill-item" data-skill="React">
+                            <div class="skill-icon">R</div>
+                            <span class="skill-name">React</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="Node.js">
+                            <div class="skill-icon">N</div>
+                            <span class="skill-name">Node.js</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item" data-skill="Three.js">
+                            <div class="skill-icon">3D</div>
+                            <span class="skill-name">Three.js</span>
+                            <div class="skill-level">
+                                <div class="skill-bar" data-level="75"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-gallery">
+                <div class="project-item" data-category="game">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">🎮</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('game1')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-item" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">🌐</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('web1')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-item" data-category="game">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">🏆</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('game2')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-item" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">📊</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('web2')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-item" data-category="game">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">🚀</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('game3')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-item" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon">💻</div>
+                        <div class="project-overlay">
+                            <button class="view-project-btn" onclick="openProjectModal('web3')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <div class="modal-placeholder">🎯</div>
+                </div>
+                <div class="modal-info">
+                    <h3 id="modalTitle">Project Title</h3>
+                    <p id="modalDescription">Project description will appear here...</p>
+                    <div class="modal-tech">
+                        <span class="tech-tag">Technology</span>
+                    </div>
+                    <div class="modal-links">
+                        <a href="#" class="modal-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Live Demo
+                        </a>
+                        <a href="#" class="modal-link" target="_blank">
+                            <i class="fab fa-github"></i>
+                            Source Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Let's Work Together</h3>
+                    <p>I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>your.email@example.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fab fa-linkedin"></i>
+                            <div>
+                                <h4>LinkedIn</h4>
+                                <p>linkedin.com/in/yourprofile</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fab fa-github"></i>
+                            <div>
+                                <h4>GitHub</h4>
+                                <p>github.com/yourusername</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">DEV</span>
+                    <div class="logo-cube"></div>
+                </div>
+                <p>&copy; 2024 Your Name. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

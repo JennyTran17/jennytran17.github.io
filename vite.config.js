@@ -14,10 +14,7 @@ export default defineConfig({
     minify: 'terser',
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
-          gsap: ['gsap']
-        }
+        manualChunks: undefined
       }
     }
   },

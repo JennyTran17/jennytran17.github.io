@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initEventListeners();
     initScrollAnimations();
     initSkillBars();
+    initProjectCards();
     initContactForm();
     initMobileMenu();
 
@@ -406,22 +407,7 @@ function initScrollAnimations() {
         stagger: 0.2,
         ease: 'power3.out'
     });
-    
-    // Projects section animations
-    gsap.from('.project-card', {
-        scrollTrigger: {
-            trigger: '.projects',
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-            once: true,
-        },
-        duration: 0.8,
-        y: 50,
-        opacity: 0,
-        stagger: 0.15,
-        ease: 'power3.out'
-    });
-    
+
     // Contact section animations
     gsap.from('.contact-info', {
         scrollTrigger: {
@@ -450,6 +436,36 @@ function initScrollAnimations() {
     });
 
     ScrollTrigger.refresh();
+}
+
+// Remove this from initScrollAnimations():
+// gsap.set('.project-card', { opacity: 0, y: 50 });
+// gsap.to('.project-card', { scrollTrigger: ... })
+
+// Add this new function instead:
+function initProjectCards() {
+    const cards = document.querySelectorAll('.project-card');
+
+    // Set initial state
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 150);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => observer.observe(card));
 }
 
 // Skill bars animation

@@ -886,12 +886,14 @@ p {
     font-size: 1rem;
     transition: border-color 0.3s ease;
     background: var(--bg-primary);
+    color: white;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
+    color: white;
 }
 
 /* Footer */

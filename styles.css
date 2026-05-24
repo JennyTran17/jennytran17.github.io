@@ -933,28 +933,30 @@ p {
     margin-bottom: 2rem;
 }
 
-.modal-links {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+.project-card .modal-links {
+    margin-top: 1rem;
 }
 
-.modal-link {
-    background: var(--gradient-primary);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    text-decoration: none;
-    display: flex;
+.project-card .modal-link {
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: var(--shadow-md);
 }
 
-.modal-link:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 0, 128, 0.5);
+.project-card .modal-link:hover {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--neon-glow);
+    transform: translateY(-2px);
 }
 
 /* Contact Section */
@@ -1157,50 +1159,6 @@ p {
         transform: translateX(0);
     }
 }
-
-/* Custom Cursor */
-body {
-    cursor: none;
-}
-
-.custom-cursor {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10000;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
-    box-shadow: 0 0 20px var(--primary-color);
-}
-
-.custom-cursor.hover {
-    transform: scale(2);
-    background: var(--secondary-color);
-}
-
-/* Cursor trail effect */
-.cursor-trail {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.6;
-    transform: translate(-50%, -50%);
-    transition: all 0.05s ease;
-    box-shadow: 0 0 8px var(--primary-color);
-}
-
-.cursor-trail:nth-child(1) { opacity: 0.8; transform: scale(1); }
-.cursor-trail:nth-child(2) { opacity: 0.6; transform: scale(0.9); }
-.cursor-trail:nth-child(3) { opacity: 0.4; transform: scale(0.8); }
-.cursor-trail:nth-child(4) { opacity: 0.2; transform: scale(0.7); }
-.cursor-trail:nth-child(5) { opacity: 0.1; transform: scale(0.6); }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
@@ -1626,4 +1584,79 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 0.25rem;
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.project-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 4px 0 0 4px;
+}
+
+.project-card:hover {
+    border-color: var(--primary-color);
+    transform: translateX(8px);
+    box-shadow: var(--shadow-lg), var(--neon-glow);
+}
+
+.project-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.5;
+    min-width: 60px;
+}
+
+.project-info h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.project-info p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+    .project-card {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .project-number {
+        font-size: 1.5rem;
+    }
 }

@@ -357,55 +357,98 @@
     <section id="projects" class="projects">
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-gallery">
-                <div class="project-item" data-category="web">
-                    <div class="project-thumbnail">
-                        <div class="project-icon">#1</div>
-                        <div class="project-overlay">
-                            <button class="view-project-btn" data-project="proj1">
-                                <i class="fas fa-eye"></i>
-                            </button>
+            <div class="projects-list">
+                <div class="project-card">
+                    <div class="project-number">#1</div>
+                    <div class="project-info">
+                        <h3>Grassland Resilience</h3>
+                        <p>A web application that monitors grassland health across Ireland using NASA satellite data.</p>
+                        <div class="project-tags">
+                            <span class="tech-tag">Javascript</span>
+                            <span class="tech-tag">Typescript</span>
+                            <span class="tech-tag">HTML</span>
+                            <span class="tech-tag">CSS</span>
+                        </div>
+                        <div class="modal-links">
+                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="project-item" data-category="web">
-                    <div class="project-thumbnail">
-                        <div class="project-icon">#2</div>
-                        <div class="project-overlay">
-                            <button class="view-project-btn" data-project="proj2">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                <div class="project-card">
+                    <div class="project-number">#2</div>
+                    <div class="project-info">
+                        <h3>Offshore Wind Guardian</h3>
+                        <p>AI-powered monitoring system for offshore wind farms with BME280 sensors, 6-axis IMU, and hydrophone acoustic monitoring.</p>
+                        <div class="project-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Shell</span>
+                            <span class="tech-tag">Makefile</span>
+                            <span class="tech-tag">Dockerfile</span>
+                        </div>
+                        <div class="modal-links">
+                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="project-item" data-category="web">
-                    <div class="project-thumbnail">
-                        <div class="project-icon">#3</div>
-                        <div class="project-overlay">
-                            <button class="view-project-btn" data-project="proj3">                                <i class="fas fa-eye"></i>
-                            </button>
+                <div class="project-card">
+                    <div class="project-number">#3</div>
+                    <div class="project-info">
+                        <h3>Voice Assistant</h3>
+                        <p>A prototype voice assistant with speech interaction and template-based responses, with a modular design for future expansion.</p>
+                        <div class="project-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Flask</span>
+                            <span class="tech-tag">PostgreSQL</span>
+                            <span class="tech-tag">OpenAI</span>
+                        </div>
+                        <div class="modal-links">
+                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="project-item" data-category="web">
-                    <div class="project-thumbnail">
-                        <div class="project-icon">#4</div>
-                        <div class="project-overlay">
-                            <button class="view-project-btn" data-project="proj4">                                <i class="fas fa-eye"></i>
-                            </button>
+                <div class="project-card">
+                    <div class="project-number">#4</div>
+                    <div class="project-info">
+                        <h3>Weather App Platform</h3>
+                        <p>A full-stack weather notification app with weather API, Spring Boot, Kafka, and AWS.</p>
+                        <div class="project-tags">
+                            <span class="tech-tag">Spring Boot</span>
+                            <span class="tech-tag">Java</span>
+                            <span class="tech-tag">Kafka</span>
+                            <span class="tech-tag">AWS</span>
+                        </div>
+                        <div class="modal-links">
+                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="project-item" data-category="game">
-                    <div class="project-thumbnail">
-                        <div class="project-icon">#5</div>
-                        <div class="project-overlay">
-                            <button class="view-project-btn" data-project="proj5">                                <i class="fas fa-eye"></i>
-                            </button>
+                <div class="project-card">
+                    <div class="project-number">#5</div>
+                    <div class="project-info">
+                        <h3>Meteor Impact Simulation</h3>
+                        <p>A Unity application simulating meteor impacts using real-time NASA data resources.</p>
+                        <div class="project-tags">
+                            <span class="tech-tag">C#</span>
+                            <span class="tech-tag">Shaderlab</span>
+                            <span class="tech-tag">Python</span>
+                        </div>
+                        <div class="modal-links">
+                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -413,30 +456,6 @@
         </div>
     </section>
 
-    <!-- Project Modal -->
-    <div id="projectModal" class="project-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-body">
-                <div class="modal-image">
-                    <div class="modal-placeholder">🎯</div>
-                </div>
-                <div class="modal-info">
-                    <h3 id="modalTitle">Project Title</h3>
-                    <p id="modalDescription">Project description will appear here...</p>
-                    <div class="modal-tech">
-                        <span class="tech-tag">Technology</span>
-                    </div>
-                    <div class="modal-links">
-                        <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                            <i class="fab fa-github"></i>
-                            Source Code
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Contact Section -->
     <section id="contact" class="contact">

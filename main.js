@@ -233,11 +233,7 @@ function animate() {
     
     scene.rotation.y += (targetRotationY - scene.rotation.y) * 0.1;
     scene.rotation.x += (targetRotationX - scene.rotation.x) * 0.1;
-    
-    // Add subtle camera movement
-    camera.position.x = Math.sin(time * 0.2) * 0.5;
-    camera.position.y = Math.cos(time * 0.3) * 0.3;
-    
+
     renderer.render(scene, camera);
 }
 
@@ -280,14 +276,6 @@ function initAnimations() {
         y: 50,
         opacity: 0,
         delay: 0.2,
-        ease: 'power3.out'
-    });
-    
-    gsap.from('.hero-title .title-name', {
-        duration: 1.2,
-        y: 50,
-        opacity: 0,
-        delay: 0.4,
         ease: 'power3.out'
     });
     
@@ -455,6 +443,8 @@ function initScrollAnimations() {
         opacity: 0,
         ease: 'power3.out'
     });
+
+    ScrollTrigger.refresh();
 }
 
 // Skill bars animation
@@ -563,17 +553,6 @@ function initMobileMenu() {
     });
 }
 
-// Utility functions
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-}
-
 function showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
@@ -634,143 +613,6 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Parallax effect for sections
-function initParallax() {
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const parallaxElements = document.querySelectorAll('.parallax');
-        
-        parallaxElements.forEach(element => {
-            const speed = element.dataset.speed || 0.5;
-            const yPos = -(scrolled * speed);
-            element.style.transform = `translateY(${yPos}px)`;
-        });
-    });
-}
-
-// Initialize parallax
-initParallax();
-
-// Add interactive functionality to HTML elements
-function addInteractiveElements() {
-    // Interactive cube
-    const interactiveCube = document.getElementById('interactive-cube');
-    if (interactiveCube) {
-        interactiveCube.addEventListener('click', function() {
-            gsap.to(this, {
-                rotation: this.rotation + 180,
-                duration: 0.5,
-                ease: 'power2.out'
-            });
-            
-            // Create particle burst effect
-            createParticleBurst(this);
-        });
-        
-        // Hover effect
-        interactiveCube.addEventListener('mouseenter', function() {
-            gsap.to(this, {
-                scale: 1.3,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-        
-        interactiveCube.addEventListener('mouseleave', function() {
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-    }
-    
-    // Interactive orb
-    const cyberOrb = document.getElementById('cyber-orb');
-    if (cyberOrb) {
-        cyberOrb.addEventListener('click', function() {
-            gsap.to(this, {
-                scale: 0.5,
-                duration: 0.2,
-                ease: 'power2.in',
-                yoyo: true,
-                repeat: 1
-            });
-            
-            // Change color
-            this.style.background = `hsl(${Math.random() * 360}, 80%, 60%)`;
-        });
-        
-        // Floating animation
-        gsap.to(cyberOrb, {
-            y: -20,
-            duration: 2,
-            ease: 'power2.inOut',
-            repeat: -1,
-            yoyo: true
-        });
-    }
-    
-    // Floating icons interaction
-    const floatingIcons = document.querySelectorAll('.floating-icon');
-    floatingIcons.forEach((icon, index) => {
-        icon.addEventListener('click', function() {
-            gsap.to(this, {
-                scale: 1.5,
-                rotation: this.rotation + 360,
-                duration: 0.5,
-                ease: 'power2.out',
-                onComplete: () => {
-                    gsap.to(this, {
-                        scale: 1,
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
-                }
-            });
-        });
-    });
-}
-
-function createParticleBurst(element) {
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    for (let i = 0; i < 8; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'burst-particle';
-        particle.style.cssText = `
-            position: fixed;
-            left: ${centerX}px;
-            top: ${centerY}px;
-            width: 4px;
-            height: 4px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000;
-        `;
-        
-        document.body.appendChild(particle);
-        
-        const angle = (i / 8) * Math.PI * 2;
-        const distance = 50 + Math.random() * 30;
-        const endX = centerX + Math.cos(angle) * distance;
-        const endY = centerY + Math.sin(angle) * distance;
-        
-        gsap.to(particle, {
-            x: endX - centerX,
-            y: endY - centerY,
-            opacity: 0,
-            scale: 0,
-            duration: 1,
-            ease: 'power2.out',
-            onComplete: () => particle.remove()
-        });
-    }
-}
-
 // Add CSS for floating cubes and cyberpunk styling
 const style = document.createElement('style');
 style.textContent = `
@@ -827,49 +669,9 @@ document.head.appendChild(style);
 
 // Enhanced interactive elements
 setTimeout(() => {
-    addInteractiveElements();
-    
-    // Add scroll-triggered particle effects
-    addScrollParticles();
-    
     // Add typing effect to hero title
     addTypingEffect();
 }, 1000);
-
-function addScrollParticles() {
-    window.addEventListener('scroll', () => {
-        if (Math.random() > 0.95) { // 5% chance on scroll
-            createScrollParticle();
-        }
-    });
-}
-
-function createScrollParticle() {
-    const particle = document.createElement('div');
-    particle.className = 'scroll-particle';
-    particle.style.cssText = `
-        position: fixed;
-        left: ${Math.random() * window.innerWidth}px;
-        top: ${window.innerHeight + 10}px;
-        width: 4px;
-        height: 4px;
-        background: var(--primary-color);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 1000;
-        box-shadow: 0 0 10px var(--primary-color);
-    `;
-    
-    document.body.appendChild(particle);
-    
-    gsap.to(particle, {
-        y: -window.innerHeight - 20,
-        opacity: 0,
-        duration: 2,
-        ease: 'power2.out',
-        onComplete: () => particle.remove()
-    });
-}
 
 function addTypingEffect() {
     const titleName = document.querySelector('.title-name');
@@ -894,19 +696,6 @@ function addTypingEffect() {
     }, 100);
 }
 
-// Performance optimization
-let ticking = false;
-function updateOnScroll() {
-    if (!ticking) {
-        requestAnimationFrame(() => {
-            // Update scroll-based animations here
-            ticking = false;
-        });
-        ticking = true;
-    }
-}
-
-window.addEventListener('scroll', updateOnScroll);
 
 
 

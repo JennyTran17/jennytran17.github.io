@@ -926,7 +926,7 @@ function initCustomCursor() {
         const trail = document.createElement('div');
         trail.className = 'cursor-trail';
         trail.style.opacity = (1 - i * 0.2).toString();
-        trail.style.transform = `scale(${1 - i * 0.1})`;
+        trail.style.transform = `translate(-50%, -50%) scale(${1 - i * 0.1})`;
         document.body.appendChild(trail);
         trailElements.push(trail);
     }
@@ -969,11 +969,11 @@ function initCustomCursor() {
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hover');
-            cursor.style.transform = 'scale(2)';
+            cursor.style.transform = 'translate(-50%, -50%) scale(2)';
         });
         el.addEventListener('mouseleave', () => {
             cursor.classList.remove('hover');
-            cursor.style.transform = 'scale(1)';
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
         });
     });
     
@@ -991,28 +991,71 @@ function initCustomCursor() {
     });
 }
 
-// Project modal functionality
 function initProjectModal() {
     const modal = document.getElementById('projectModal');
     const closeBtn = document.querySelector('.close-modal');
-    
+
     if (!modal || !closeBtn) return;
-    
+
+    const projects = {
+        'proj1': {
+            title: 'Grassland Resilience',
+            description: 'A complete web application that monitors grassland health across Ireland using NASA satellite data.',
+            tech: ['Javascript', 'Typescript', 'HTML', 'CSS']
+        },
+        'proj2': {
+            title: 'Offshore Wind Guardian',
+            description: 'AI-powered monitoring system for offshore wind farms with BME280 environmental sensors, 6-axis IMU, and hydrophone acoustic monitoring.',
+            tech: ['Python', 'Shell', 'Makefile', 'Dockerfile']
+        },
+        'proj3': {
+            title: 'Voice Assistant',
+            description: 'A prototype voice assistant built to demonstrate speech interaction and template-based responses, with a modular design for future expansion.',
+            tech: ['Python', 'Flask', 'PostgreSQL', 'OpenAI', 'Speech Recognition', 'Text-to-Speech']
+        },
+        'proj4': {
+            title: 'Weather App Platform',
+            description: 'A full-stack weather app notification with weather API, Spring Boot, Kafka, and AWS.',
+            tech: ['Spring Boot', 'Java', 'Kafka', 'AWS']
+        },
+        'proj5': {
+            title: 'Meteor Impact Simulation',
+            description: 'A Unity application simulates the impact of meteors crashing the earth with data fetched from NASA resources.',
+            tech: ['C#', 'Shaderlab', 'Python', 'NASA Resources']
+        }
+    };
+
+    // Open modal when clicking any project button
+    document.querySelectorAll('.view-project-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const projectId = btn.getAttribute('data-project');
+            const project = projects[projectId];
+            if (!project) return;
+
+            document.getElementById('modalTitle').textContent = project.title;
+            document.getElementById('modalDescription').textContent = project.description;
+            document.querySelector('.modal-tech').innerHTML = project.tech
+                .map(t => `<span class="tech-tag">${t}</span>`).join('');
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
     // Close modal
     closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
     });
-    
-    // Close modal when clicking outside
+
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
     });
-    
-    // Close modal with Escape key
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';
@@ -1020,61 +1063,3 @@ function initProjectModal() {
         }
     });
 }
-
-// Global function to open project modal
-window.openProjectModal = function(projectId) {
-    const modal = document.getElementById('projectModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalTech = document.querySelector('.modal-tech');
-
-        const projects = {
-            'proj1': {
-                title: 'Grassland Resilience',
-                description: 'A complete web application that monitors grassland health across Ireland using NASA satellite data.',
-                tech: ['Javascript', 'Typescript', 'HTML', 'CSS']
-            },
-            'proj2': {
-                title: 'Offshore Wind Guardian',
-                description: 'AI-powered monitoring system for offshore wind farms with BME280 environmental sensors, 6-axis IMU, and hydrophone acoustic monitoring.',
-                tech: ['Python', 'Shell', 'Makefile', 'Dockerfile']
-            },
-            'proj3': {
-                title: 'Voice Assistant',
-                description: 'A prototype voice assistant built to demonstrate speech interaction and template-based responses, with a modular design for future expansion into more advanced features.',
-                tech: ['Python', 'Flask', 'PostgreSQL', 'OpenAI', 'Speech Recognition', 'Text-to-Speech']
-            },
-            'proj4': {
-                title: 'Weather App Platform',
-                description: 'A full-stack weather app  notification with weather API, Spring Boot, Kafka, and AWS.',
-                tech: ['Spring Boot', 'Java', 'Kafka', 'AWS']
-            },
-            'proj5': {
-                title: 'Meteor Impact Simulation',
-                description: 'A Unity application simulates the impact of meteors crashing the earth with data fetched from NASA resources.',
-                tech: ['C#', 'Shaderlab', 'Python', 'NASA Resources']
-            }
-        };
-    
-    const project = projects[projectId];
-    if (project) {
-        modalTitle.textContent = project.title;
-        modalDescription.textContent = project.description;
-        
-        // Update tech tags
-        modalTech.innerHTML = project.tech.map(tech => 
-            `<span class="tech-tag">${tech}</span>`
-        ).join('');
-        
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-};
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-    }
-    ScrollTrigger.killAll();
-});

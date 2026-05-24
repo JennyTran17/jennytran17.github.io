@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initSkillBars();
     initContactForm();
     initMobileMenu();
+
+    // Refresh after fonts and images settle
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 500);
 });
 
 // Three.js 3D Background
@@ -406,14 +411,14 @@ function initScrollAnimations() {
     gsap.from('.project-card', {
         scrollTrigger: {
             trigger: '.projects',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+            once: true,
         },
         duration: 0.8,
         y: 50,
         opacity: 0,
-        stagger: 0.1,
+        stagger: 0.15,
         ease: 'power3.out'
     });
     

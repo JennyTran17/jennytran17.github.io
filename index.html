@@ -6,9 +6,9 @@
     <title>Huong Tran (Jenny)</title>
     <meta name="description" content="Interactive portfolio of Huong Tran (Jenny)">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/index-CV6BQBF4.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CR4p-bK8.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="module" crossorigin src="/assets/index-BuZ7g_-m.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BX7QalGc.css">
 </head>
 <body class="is-loading">
     <!-- Preloader -->
@@ -80,49 +80,43 @@
 
     <!-- About Section -->
     <section id="about" class="about">
+        <div class="about-code-bg" aria-hidden="true">
+            <span class="about-code-line">const scene = new THREE.Scene();</span>
+            <span class="about-code-line">function initSideNav() {</span>
+            <span class="about-code-line">import { gsap } from 'gsap';</span>
+            <span class="about-code-line">public class Robot extends Unit {</span>
+            <span class="about-code-line">&lt;PlayerController active={true} /&gt;</span>
+            <span class="about-code-line">git commit -m "ship it"</span>
+            <span class="about-code-line">useEffect(() =&gt; { ... }, [])</span>
+            <span class="about-code-line">// TODO: build something great</span>
+            <span class="about-code-line">array.map(x =&gt; x * 2);</span>
+            <span class="about-code-line">export default function App() {</span>
+        </div>
         <div class="container">
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p class="about-intro">
-                        I started my journey in software design and development, diving into the world of game creation and 3D
-                modeling.
-                Along the way, I became fascinated by how technology and creativity intertwine, especially with the
-                potential of artificial intelligence.
-                It’s now my mission to craft innovative solutions and immersive experiences that showcase the endless
-                possibilities of tech.
-                    </p>
-                    <div class="about-details">
-                        <div class="detail-item">
-                            <i class="fas fa-code"></i>
-                            <div>
-                                <h4>Software Development</h4>
-                                <p>Cloud development, web applications, and software solutions</p>
-                            </div>
+                    <div class="about-cursor about-cursor--intro" id="aboutCursorIntro">
+                        <div class="about-cursor-bubble">
+                            <span class="about-cursor-meta">About <span class="about-cursor-time">2 min ago</span></span>
+                            <p class="about-cursor-message">I started my journey in software design and development, diving into the world of game creation and 3D modeling. Along the way, I became fascinated by how technology and creativity intertwine, especially with the potential of artificial intelligence. It's now my mission to craft innovative solutions and immersive experiences that showcase the endless possibilities of tech.</p>
                         </div>
-                        <div class="detail-item">
-                            <i class="fas fa-gamepad"></i>
-                            <div>
-                                <h4>Game Development</h4>
-                                <p>Interactive games, 3D graphics, and immersive experiences</p>
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fas fa-lightbulb"></i>
-                            <div>
-                                <h4>Innovation</h4>
-                                <p>Creative problem-solving and cutting-edge technology</p>
-                            </div>
-                        </div>
+                        <svg class="about-cursor-icon" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 2 L3 19 L8 15 L11 21 L14 19.5 L11 13.5 L18 13 Z" fill="#ffffff" stroke="#ff0080" stroke-width="1.2" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="about-cursor-tag">Jenny</span>
                     </div>
                 </div>
                 <div class="about-visual">
-                    <div class="about-card">
-                        <div class="card-content">
-                            <div class="experience-item">
-                                <span class="role">I am a woman and I want to advocate for women in engineering</span>
-                            </div>
+                    <div class="about-cursor about-cursor--alt" id="aboutCursor">
+                        <div class="about-cursor-bubble">
+                            <span class="about-cursor-meta">What I believe <span class="about-cursor-time">now</span></span>
+                            <p class="about-cursor-message">As a woman, I want to advocate for women in engineering.</p>
                         </div>
+                        <svg class="about-cursor-icon" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 2 L3 19 L8 15 L11 21 L14 19.5 L11 13.5 L18 13 Z" fill="#ffffff" stroke="#ff0080" stroke-width="1.2" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="about-cursor-tag">Jenny</span>
                     </div>
                 </div>
             </div>
@@ -392,9 +386,19 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
+        <div class="contact-matrix-bg" aria-hidden="true">
+            <canvas id="matrixCanvas"></canvas>
+        </div>
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-content">
+            <div class="contact-cta" id="contactCta">
+                <h2 class="contact-cta-title">Most software works. I design systems that make complex things feel simple. <br>Let's work together</h2>
+                <button type="button" class="contact-cta-btn" id="startProjectBtn">
+                    Contact
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="contact-content" id="contactContent" hidden>
                 <div class="contact-info">
                     <h3>Let's Work Together</h3>
                     <p>I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!</p>
@@ -436,16 +440,16 @@
                         <div class="form-group">
                             <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> 
-                            Send Message
-                        </button>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-file-download"></i>
-                            <a href="https://drive.google.com/file/d/10kr5Svr0sEVP_VZqT6CYyGCr2T7bbFzj/view?usp=sharing" style="text-decoration: none; color: white;">
-                            Download CV
-                        </a>
-                        </button>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Message
+                            </button>
+                            <a href="https://drive.google.com/file/d/10kr5Svr0sEVP_VZqT6CYyGCr2T7bbFzj/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener">
+                                <i class="fas fa-file-download"></i>
+                                Download CV
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -468,7 +472,7 @@
             </div>
         </div>
     </footer>
-
+
 
 </body>
 </html>

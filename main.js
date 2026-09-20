@@ -23,10 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     initManifestoReveal();
     initExperienceGallery();
     initScrollAnimations();
+    initAboutCursor();
+    initAboutCursorEntrance();
+    initAboutParallax();
     initSkillsProgress();
     initSkillsTitleReveal();
     initProjectCards();
     initContactForm();
+    initContactCta();
+    initContactMatrixBg();
     initSideNav();
 
     // Refresh after fonts and images settle
@@ -40,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initManifestoReveal() {
     const section = document.querySelector('.manifesto');
     const textEl = document.getElementById('manifestoText');
+    const container = document.querySelector('.manifesto-container');
     if (!section || !textEl) return;
 
     const words = splitIntoWords(textEl);
@@ -58,6 +64,11 @@ function initManifestoReveal() {
                 const wordProgress = gsap.utils.clamp(0, 1, progress - i);
                 word.style.color = gsap.utils.interpolate('#ffffff', '#ff0080', wordProgress);
             });
+            // Subtle parallax drift as the text fills, layering it against the
+            // About section and marquee that scroll past before it
+            if (container) {
+                gsap.set(container, { y: -30 * self.progress });
+            }
         }
     });
 }
@@ -500,35 +511,64 @@ function initAnimations() {
     });
 }
 
+// About section: Miro-style collaborator cursors (name tag + message bubble),
+// each gently floating near its paragraph, slightly out of phase with each other
+function initAboutCursor() {
+    const cursors = document.querySelectorAll('.about-cursor');
+    if (!cursors.length) return;
+
+    cursors.forEach((cursor, i) => {
+        gsap.to(cursor, {
+            y: -10,
+            duration: 2.2,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            delay: i * 0.4
+        });
+    });
+}
+
+// Parallax: About Me content drifts at a different rate than the page scroll,
+// so it settles into place at a slightly different pace than the Manifesto section below it
+function initAboutParallax() {
+    const aboutContent = document.querySelector('.about-content');
+    if (!aboutContent) return;
+
+    gsap.to(aboutContent, {
+        y: -70,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.about',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
+}
+
+// Each About cursor "pops" in (spring scale + fade) as it scrolls into view,
+// matching the entrance style on emilianmisera.com
+function initAboutCursorEntrance() {
+    const cursors = document.querySelectorAll('.about-cursor');
+    cursors.forEach((cursor) => {
+        gsap.from(cursor, {
+            scale: 0.6,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'back.out(1.7)',
+            scrollTrigger: {
+                trigger: cursor,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+    });
+}
+
 // Scroll-triggered animations
 function initScrollAnimations() {
-    // About section animations
-    gsap.from('.about-text', {
-        scrollTrigger: {
-            trigger: '.about',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        duration: 1,
-        x: -50,
-        opacity: 0,
-        ease: 'power3.out'
-    });
-    
-    gsap.from('.about-visual', {
-        scrollTrigger: {
-            trigger: '.about',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        duration: 1,
-        x: 50,
-        opacity: 0,
-        ease: 'power3.out'
-    });
-    
+
     // Skills section animations
     gsap.from('.skill-group', {
         scrollTrigger: {
@@ -644,37 +684,130 @@ function initSkillsTitleReveal() {
 function initContactForm() {
     const form = document.getElementById('contactForm');
     if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
+
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        
+
         // Show loading state
         submitBtn.innerHTML = '<span class="loading"></span> Sending...';
         submitBtn.disabled = true;
-        
-        // Simulate form submission (replace with actual form handling)
-        setTimeout(() => {
-            // Success animation
-            gsap.to(form, {
-                duration: 0.5,
-                scale: 1.05,
-                ease: 'power2.out',
-                yoyo: true,
-                repeat: 1,
-                onComplete: () => {
-                    // Reset form
-                    form.reset();
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    
-                    // Show success message
-                    showNotification('Message sent successfully!', 'success');
-                }
+
+        // Actually deliver the message via Formspree (the form's action/method above),
+        // instead of just faking success locally
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+                headers: { Accept: 'application/json' }
             });
-        }, 2000);
+
+            if (response.ok) {
+                gsap.to(form, {
+                    duration: 0.5,
+                    scale: 1.05,
+                    ease: 'power2.out',
+                    yoyo: true,
+                    repeat: 1,
+                    onComplete: () => {
+                        form.reset();
+                        showNotification('Message sent successfully!', 'success');
+                    }
+                });
+            } else {
+                showNotification('Something went wrong sending your message. Please try emailing me directly.', 'error');
+            }
+        } catch (err) {
+            showNotification('Something went wrong sending your message. Please try emailing me directly.', 'error');
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+}
+
+// Contact CTA: keeps the form hidden until "Start the project" is clicked
+function initContactCta() {
+    const cta = document.getElementById('contactCta');
+    const content = document.getElementById('contactContent');
+    const btn = document.getElementById('startProjectBtn');
+    if (!cta || !content || !btn) return;
+
+    btn.addEventListener('click', () => {
+        gsap.to(cta, {
+            opacity: 0,
+            y: -20,
+            duration: 0.4,
+            ease: 'power2.in',
+            onComplete: () => {
+                cta.style.display = 'none';
+                content.hidden = false;
+                gsap.fromTo(content,
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: 'power2.out',
+                        onComplete: () => ScrollTrigger.refresh()
+                    }
+                );
+            }
+        });
+    });
+}
+
+// Contact section background: a pink "digital rain" of code characters, canvas-driven
+function initContactMatrixBg() {
+    const canvas = document.getElementById('matrixCanvas');
+    const section = document.querySelector('.contact');
+    if (!canvas || !section) return;
+
+    const ctx = canvas.getContext('2d');
+    const chars = '01$%#@+=*<>{}[]/\\';
+    const fontSize = 16;
+    let columns = 0;
+    let drops = [];
+    let rafId = null;
+    let lastFrameTime = 0;
+    const frameInterval = 110; // ms between updates - slows the fall + character flicker so it reads clearly
+
+    const resize = () => {
+        canvas.width = section.offsetWidth;
+        canvas.height = section.offsetHeight;
+        columns = Math.max(1, Math.floor(canvas.width / fontSize));
+        drops = new Array(columns).fill(0).map(() => Math.random() * -50);
+    };
+
+    const draw = (time = 0) => {
+        rafId = requestAnimationFrame(draw);
+
+        if (time - lastFrameTime < frameInterval) return;
+        lastFrameTime = time;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(255, 0, 128, 0.8)';
+        ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
+
+        drops.forEach((y, i) => {
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, y * fontSize);
+            if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i] += 0.3;
+        });
+    };
+
+    resize();
+    draw();
+    window.addEventListener('resize', () => {
+        cancelAnimationFrame(rafId);
+        resize();
+        draw();
     });
 }
 
@@ -723,7 +856,7 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#10b981' : '#6366f1'};
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#6366f1'};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 8px;

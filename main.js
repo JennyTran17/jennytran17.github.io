@@ -14,19 +14,190 @@ let windowHalfY = window.innerHeight / 2;
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     initThreeJS();
-    initAnimations();
+    initPreloader();
     initEventListeners();
+    // Pinned sections first: they insert scroll spacers that push everything
+    // below them (including Skills) further down the page. Anything that
+    // measures scroll position for a section after these must run afterward,
+    // or it will compute against a too-short document and fire prematurely.
+    initManifestoReveal();
+    initExperienceGallery();
     initScrollAnimations();
-    initSkillBars();
+    initSkillsProgress();
+    initSkillsTitleReveal();
     initProjectCards();
     initContactForm();
-    initMobileMenu();
+    initSideNav();
 
     // Refresh after fonts and images settle
     setTimeout(() => {
         ScrollTrigger.refresh();
     }, 500);
 });
+
+// Manifesto section: pins while scroll progressively colors each word
+// white -> pink, left to right; releases the pin once fully colored
+function initManifestoReveal() {
+    const section = document.querySelector('.manifesto');
+    const textEl = document.getElementById('manifestoText');
+    if (!section || !textEl) return;
+
+    const words = splitIntoWords(textEl);
+    if (!words.length) return;
+
+    // Short pin distance: fills up in roughly 3 scroll actions instead of a long scrub
+    ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: '+=650',
+        pin: true,
+        scrub: 0.3,
+        onUpdate: (self) => {
+            const progress = self.progress * words.length;
+            words.forEach((word, i) => {
+                const wordProgress = gsap.utils.clamp(0, 1, progress - i);
+                word.style.color = gsap.utils.interpolate('#ffffff', '#ff0080', wordProgress);
+            });
+        }
+    });
+}
+
+// Wraps each word of an element's text in its own span, for staggered per-word animation
+function splitIntoWords(el) {
+    const text = el.textContent.trim();
+    el.textContent = '';
+    const words = [];
+    const parts = text.split(/\s+/);
+    parts.forEach((word, i) => {
+        const span = document.createElement('span');
+        span.className = 'word';
+        span.textContent = word;
+        el.appendChild(span);
+        words.push(span);
+        if (i < parts.length - 1) {
+            el.appendChild(document.createTextNode(' '));
+        }
+    });
+    return words;
+}
+
+// Experience gallery: a windowed 3-item carousel. The first item starts active
+// at the top slot (no previous item to center against). From the second item
+// onward, the track shifts up one slot per step so the active item sits in the
+// middle, with the previous item shrinking above it and the next item previewed below.
+function initExperienceGallery() {
+    const windowEl = document.getElementById('expWindow');
+    const track = document.getElementById('expTrack');
+    if (!windowEl || !track) return;
+
+    const items = Array.from(track.querySelectorAll('.exp-item'));
+    if (!items.length) return;
+
+    // Measure a non-active item so the active item's scale-up doesn't skew the height
+    const itemHeight = (items[1] || items[0]).getBoundingClientRect().height;
+    windowEl.style.height = `${itemHeight * 3}px`;
+
+    ScrollTrigger.create({
+        trigger: '.timeline',
+        start: 'top top',
+        end: () => `+=${(items.length - 1) * 420}`,
+        pin: true,
+        scrub: 0.6,
+        onUpdate: (self) => {
+            const progress = self.progress * (items.length - 1);
+            // No shift while the first item is active (it stays in the top slot);
+            // from the second item on, shift up one slot per step to keep it centered
+            const offset = Math.max(progress - 1, 0);
+            gsap.set(track, { y: -offset * itemHeight });
+
+            // Scale/opacity track the same continuous progress as the track position,
+            // so an item only finishes scaling up exactly as it settles into the middle
+            items.forEach((item, i) => {
+                const distance = Math.min(Math.abs(progress - i), 1);
+                gsap.set(item, {
+                    scale: gsap.utils.interpolate(1.08, 0.88, distance),
+                    opacity: gsap.utils.interpolate(1, 0.4, distance)
+                });
+                item.classList.toggle('active', distance < 0.05);
+            });
+        }
+    });
+}
+
+// Preloader / intro animation
+function initPreloader() {
+    const preloader = document.getElementById('preloader');
+    if (!preloader) {
+        initAnimations();
+        return;
+    }
+
+    let done = false;
+    const finish = () => {
+        if (done) return;
+        done = true;
+        preloader.remove();
+        document.body.classList.remove('is-loading');
+        initAnimations();
+    };
+
+    // Safety net so the intro can never hang the site if something interrupts the tween
+    const fallback = setTimeout(finish, 6000);
+
+    const nameEl = preloader.querySelector('.preloader-name');
+    const copyrightEl = preloader.querySelector('.preloader-copyright');
+    const roleEl = preloader.querySelector('.preloader-role');
+    const markEl = preloader.querySelector('.preloader-mark');
+    const topPanel = preloader.querySelector('.preloader-panel--top');
+    const bottomPanel = preloader.querySelector('.preloader-panel--bottom');
+    const letters = splitIntoLetters(nameEl);
+
+    gsap.set(letters, { yPercent: 140, opacity: 0 });
+    gsap.set(copyrightEl, { y: 14, opacity: 0 });
+    gsap.set(roleEl, { y: 16, opacity: 0 });
+
+    gsap.timeline({ onComplete: () => { clearTimeout(fallback); finish(); } })
+        // Letters float up into place, slowly
+        .to(letters, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.07,
+            ease: 'power3.out'
+        })
+        .to(copyrightEl, {
+            y: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power2.out'
+        }, '-=0.3')
+        .to(roleEl, {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.out'
+        }, '-=0.15')
+        .to({}, { duration: 0.7 }) // hold before the reveal
+        // Screen splits open at the middle to reveal the page
+        .to(topPanel, { yPercent: -100, duration: 0.9, ease: 'power4.inOut' }, 'split')
+        .to(bottomPanel, { yPercent: 100, duration: 0.9, ease: 'power4.inOut' }, 'split')
+        .to(markEl, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 'split');
+}
+
+// Wraps each character of an element's text in its own span for per-letter animation
+function splitIntoLetters(el) {
+    const text = el.textContent;
+    el.textContent = '';
+    const letters = [];
+    text.split('').forEach(char => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = char === ' ' ? ' ' : char;
+        el.appendChild(span);
+        letters.push(span);
+    });
+    return letters;
+}
 
 // Three.js 3D Background
 function initThreeJS() {
@@ -358,43 +529,8 @@ function initScrollAnimations() {
         ease: 'power3.out'
     });
     
-    // Enhanced Timeline section animations
-    gsap.from('.timeline-item', {
-        scrollTrigger: {
-            trigger: '.timeline',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        duration: 1,
-        y: 80,
-        opacity: 0,
-        stagger: 0.3,
-        ease: 'power3.out',
-        onComplete: () => {
-            // Add glow effect to timeline markers
-            gsap.to('.timeline-marker', {
-                boxShadow: '0 0 20px var(--primary-color)',
-                duration: 0.5,
-                stagger: 0.1
-            });
-        }
-    });
-    
-    // Add parallax effect to timeline
-    gsap.to('.timeline-container', {
-        scrollTrigger: {
-            trigger: '.timeline',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
-        },
-        y: -100,
-        ease: 'none'
-    });
-    
     // Skills section animations
-    gsap.from('.skill-category', {
+    gsap.from('.skill-group', {
         scrollTrigger: {
             trigger: '.skills',
             start: 'top 80%',
@@ -468,26 +604,39 @@ function initProjectCards() {
     cards.forEach(card => observer.observe(card));
 }
 
-// Skill bars animation
-function initSkillBars() {
-    const skillBars = document.querySelectorAll('.skill-bar');
-    
-    skillBars.forEach(bar => {
-        const level = bar.getAttribute('data-level');
-        gsap.set(bar, { scaleX: 0, transformOrigin: 'left center' });
+// Skills section progress bar: fills as the skill list scrolls through the viewport
+function initSkillsProgress() {
+    const section = document.querySelector('.skills');
+    const bar = document.getElementById('skillsProgressBar');
+    if (!section || !bar) return;
 
-        ScrollTrigger.create({
-            trigger: bar,
-            start: 'top 90%',
-            once: true,
-            onEnter: () => {
-                gsap.to(bar, {
-                    duration: 1.5,
-                    scaleX: level / 100,
-                    ease: 'power2.out'
-                });
-            }
-        });
+    ScrollTrigger.create({
+        trigger: section,
+        start: 'top 60%',
+        end: 'bottom bottom',
+        scrub: true,
+        onUpdate: (self) => {
+            gsap.set(bar, { width: `${self.progress * 100}%` });
+        }
+    });
+}
+
+// Skills heading reveal: a pink block sits over each line and slides right-to-left
+// to uncover the text underneath
+function initSkillsTitleReveal() {
+    const masks = document.querySelectorAll('.skills-title-mask');
+    if (!masks.length) return;
+
+    gsap.to(masks, {
+        xPercent: -100,
+        duration: 1,
+        ease: 'power4.inOut',
+        stagger: 0.15,
+        scrollTrigger: {
+            trigger: '.skills-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        }
     });
 }
 
@@ -529,49 +678,33 @@ function initContactForm() {
     });
 }
 
-// Mobile menu functionality
-function initMobileMenu() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (!hamburger || !navMenu) return;
-    
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        // Animate hamburger
-        const spans = hamburger.querySelectorAll('span');
-        if (hamburger.classList.contains('active')) {
-            gsap.to(spans[0], { rotation: 45, y: 8, duration: 0.3 });
-            gsap.to(spans[1], { opacity: 0, duration: 0.3 });
-            gsap.to(spans[2], { rotation: -45, y: -8, duration: 0.3 });
-            
-            gsap.fromTo(navMenu, 
-                { opacity: 0, y: -20 },
-                { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
-            );
-        } else {
-            gsap.to(spans[0], { rotation: 0, y: 0, duration: 0.3 });
-            gsap.to(spans[1], { opacity: 1, duration: 0.3 });
-            gsap.to(spans[2], { rotation: 0, y: 0, duration: 0.3 });
-            
-            gsap.to(navMenu, { opacity: 0, y: -20, duration: 0.3 });
-        }
-    });
-    
-    // Close menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            
-            const spans = hamburger.querySelectorAll('span');
-            gsap.to(spans[0], { rotation: 0, y: 0, duration: 0.3 });
-            gsap.to(spans[1], { opacity: 1, duration: 0.3 });
-            gsap.to(spans[2], { rotation: 0, y: 0, duration: 0.3 });
+// Vertical side nav: highlights + scales up the link for the section in view
+function initSideNav() {
+    const links = document.querySelectorAll('.side-nav-link');
+    if (!links.length) return;
+
+    const setActive = (id) => {
+        links.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
         });
+    };
+
+    const sections = Array.from(links)
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setActive(entry.target.id);
+            }
+        });
+    }, {
+        rootMargin: '-45% 0px -45% 0px',
+        threshold: 0
     });
+
+    sections.forEach(section => observer.observe(section));
 }
 
 function showNotification(message, type = 'info') {

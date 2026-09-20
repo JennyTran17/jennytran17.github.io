@@ -7,31 +7,51 @@
     <meta name="description" content="Interactive portfolio of Huong Tran (Jenny)">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/index-1XvYA4NQ.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-TH0XV1Bz.css">
+  <script type="module" crossorigin src="/assets/index-CV6BQBF4.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CR4p-bK8.css">
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <span class="logo-text">JT</span>
-                <div class="logo-cube"></div>
+<body class="is-loading">
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-panel preloader-panel--top"></div>
+        <div class="preloader-panel preloader-panel--bottom"></div>
+        <div class="preloader-mark">
+            <div class="preloader-name-wrap">
+                <span class="preloader-name">Huong Tran</span><span class="preloader-copyright">&copy;</span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#timeline" class="nav-link">Experience</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <span class="preloader-role">Software Engineer</span>
         </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="side-nav">
+        <ul class="side-nav-list">
+            <li>
+                <a href="#home" class="side-nav-link active" aria-label="Home">
+                    <span class="side-nav-text">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="#about" class="side-nav-link" aria-label="About">
+                    <span class="side-nav-text">About</span>
+                </a>
+            </li>
+            <li>
+                <a href="#timeline" class="side-nav-link" aria-label="Experience">
+                    <span class="side-nav-text">Experience</span>
+                </a>
+            </li>
+            <li>
+                <a href="#projects" class="side-nav-link" aria-label="Works">
+                    <span class="side-nav-text">Works</span>
+                </a>
+            </li>
+            <li>
+                <a href="#contact" class="side-nav-link" aria-label="Let's talk">
+                    <span class="side-nav-text">Let's talk</span>
+                </a>
+            </li>
+        </ul>
     </nav>
 
     <!-- Hero Section -->
@@ -109,18 +129,26 @@
         </div>
     </section>
 
+    <!-- Manifesto Section -->
+    <section id="manifesto" class="manifesto">
+        <div class="container manifesto-container">
+            <p class="manifesto-text" id="manifestoText">From idea to launch. Clean, scalable digital products built to move fast, stay simple, and perform in real-world use, driven by clarity, structured systems, and intentional design.</p>
+        </div>
+    </section>
+
     <!-- Timeline Section -->
     <section id="timeline" class="timeline">
         <div class="container">
             <h2 class="section-title">Experience</h2>
-            <div class="timeline-container">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">12 January - 30 August 2026</div>
-                        <h3>Placement in Ericsson</h3>
-                        <p>Gain exposure to cloud-native technologies, orchestration systems, and Cloud RAN architectures with AI driven frameworks and participated in Infuse program mentorship.</p>
-                        <div class="timeline-tech">
+        </div>
+        <div class="exp-gallery">
+            <div class="exp-window" id="expWindow">
+                <div class="exp-track" id="expTrack">
+                    <div class="exp-item active">
+                        <span class="exp-year">12 January - 30 August 2026</span>
+                        <h3 class="exp-role">Placement in Ericsson</h3>
+                        <p class="exp-description">Gain exposure to cloud-native technologies, orchestration systems, and Cloud RAN architectures with AI driven frameworks and participated in Infuse program mentorship.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Java</span>
                             <span class="tech-tag">Go</span>
                             <span class="tech-tag">Spring Framework</span>
@@ -128,115 +156,85 @@
                             <span class="tech-tag">AWS</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">04 - 09 May 2026</div>
-                        <h3>SAP RUNEU Video Games and Social Transformation</h3>
-                        <p>A week of international experience and dwell game development. Team collaboration
-                            to understand disability needs, design inclusive gameplay experiences, and develop accessible game concepts tailored for targeted user profiles.</p>
-                        <div class="timeline-tech">
+                    <div class="exp-item">
+                        <span class="exp-year">04 - 09 May 2026</span>
+                        <h3 class="exp-role">SAP RUNEU Video Games and Social Transformation</h3>
+                        <p class="exp-description">A week of international experience and dwell game development. Team collaboration to understand disability needs, design inclusive gameplay experiences, and develop accessible game concepts tailored for targeted user profiles.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Unity</span>
                             <span class="tech-tag">Accessibility Research</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">03 - 05 October 2025</div>
-                        <h3>Nasa Space Apps Challenge - Hackathon</h3>
-                        <p>Participated in teams for a 48 Hours coding sessions and create Unity application about Meteor Impact using NASA real time resources.</p>
-                        <div class="timeline-tech">
+                    <div class="exp-item">
+                        <span class="exp-year">03 - 05 October 2025</span>
+                        <h3 class="exp-role">Nasa Space Apps Challenge - Hackathon</h3>
+                        <p class="exp-description">Participated in teams for a 48 Hours coding sessions and create Unity application about Meteor Impact using NASA real time resources.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">C#</span>
                             <span class="tech-tag">Python</span>
                             <span class="tech-tag">Shaderlab</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">03 June - 29 August 2025</div>
-                        <h3>Summer Internship in Ericsson</h3>
-                        <p>Learning development of enterprise applications and mentoring junior developers</p>
-                        <div class="timeline-tech">
+                    <div class="exp-item">
+                        <span class="exp-year">03 June - 29 August 2025</span>
+                        <h3 class="exp-role">Summer Internship in Ericsson</h3>
+                        <p class="exp-description">Learning development of enterprise applications and mentoring junior developers.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Java</span>
                             <span class="tech-tag">Spring Framework</span>
                             <span class="tech-tag">AWS</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">January - March 2025</div>
-                        <h3>Game Fleadh Competition</h3>
-                        <p>Working in teams and create a game with the theme "Small World"</p>
-                        <div class="timeline-tech">
+
+                    <div class="exp-item">
+                        <span class="exp-year">January - March 2025</span>
+                        <h3 class="exp-role">Game Fleadh Competition</h3>
+                        <p class="exp-description">Working in teams and create a game with the theme "Small World".</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Unity</span>
                             <span class="tech-tag">C#</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">May 2024</div>
-                        <h3>Pro-a-thon Competition</h3>
-                        <p>Participated in a team competition about Education and Technology for the Disabilities. The
-                            project is to create a prototype and design for an app/website and come up with solutions about
-                            how to enhance education for people who needs extra help.</p>
-                        <div class="timeline-tech">
+                    <div class="exp-item">
+                        <span class="exp-year">May 2024</span>
+                        <h3 class="exp-role">Pro-a-thon Competition</h3>
+                        <p class="exp-description">Participated in a team competition about Education and Technology for the Disabilities. Created a prototype and design for an app/website to enhance education for people who need extra help.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Figma</span>
                         </div>
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">January - August 2024</div>
-                        <h3>Part Time Coder and Animator at InfiniteKidz StartUp</h3>
-                        <p>A part time job as a coder and animator for a start up company. Creating 2D animations for
-                            children's educational apps. Developing a game called Whisker Adventure and uploaded the game draft
-                            version onto itch.io. There is also developing version on Play Store.</p>
-                        <div class="timeline-tech">
+
+                    <div class="exp-item">
+                        <span class="exp-year">January - August 2024</span>
+                        <h3 class="exp-role">Part Time Coder and Animator at InfiniteKidz StartUp</h3>
+                        <p class="exp-description">Creating 2D animations for children's educational apps. Developed a game called Whisker Adventure and uploaded the draft version onto itch.io, with a Play Store version in progress.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>                            
+                            <span class="tech-tag">C#</span>
                         </div>
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">25 November 2023</div>
-                        <h3>Galway Game Jam</h3>
-                        <p>Paticipated in teams with other members to create a simple game. Discuss and learn basic
-                            Unity
-                            with C#, Krita for graphics, problem solving and self improvements. Upload game draft onto
-                            itch.io (Game name: Umbrella Lad)</p>
-                        <div class="timeline-tech">
+
+                    <div class="exp-item">
+                        <span class="exp-year">25 November 2023</span>
+                        <h3 class="exp-role">Galway Game Jam</h3>
+                        <p class="exp-description">Participated in teams with other members to create a simple game. Learned basic Unity with C#, Krita for graphics, problem solving and self improvement.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>                            
+                            <span class="tech-tag">C#</span>
                         </div>
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-date">July - August 2022</div>
-                        <h3>Infuse & Hackathon Program</h3>
-                        <p>Participated in individual and teamwork program and learned about IT, software design and Python
-                            languages.</p>
-                        <div class="timeline-tech">
+
+                    <div class="exp-item">
+                        <span class="exp-year">July - August 2022</span>
+                        <h3 class="exp-role">Infuse & Hackathon Program</h3>
+                        <p class="exp-description">Participated in individual and teamwork program and learned about IT, software design and Python languages.</p>
+                        <div class="exp-tech">
                             <span class="tech-tag">Python</span>
-                            <span class="tech-tag">HTML</span>                            
+                            <span class="tech-tag">HTML</span>
                         </div>
                     </div>
                 </div>
@@ -246,109 +244,43 @@
 
     <!-- Skills Section -->
     <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Skills & Technologies</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Programming Languages</h3>
-                    <div class="skill-items">
-                        <div class="skill-item" data-skill="Java">
-                            <div class="skill-icon">Java</div>
-                            <span class="skill-name">Java</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="95"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="JavaScript">
-                            <div class="skill-icon">JS</div>
-                            <span class="skill-name">JavaScript</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="70"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="Python">
-                            <div class="skill-icon">PY</div>
-                            <span class="skill-name">Python</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="85"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="C#">
-                            <div class="skill-icon">C#</div>
-                            <span class="skill-name">C#</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="80"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="C++">
-                            <div class="skill-icon">C++</div>
-                            <span class="skill-name">C++</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="85"></div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="container skills-layout">
+            <div class="skills-intro">
+                <h2 class="skills-title">
+                    <span class="skills-title-line"><span class="skills-title-text">Skills</span><span class="skills-title-mask"></span></span>
+                    <span class="skills-title-line"><span class="skills-title-text">&amp; Expertise</span><span class="skills-title-mask"></span></span>
+                </h2>
+                <div class="skills-progress">
+                    <div class="skills-progress-bar" id="skillsProgressBar"></div>
                 </div>
-                
-                <div class="skill-category">
-                    <h3>Game Development</h3>
-                    <div class="skill-items">
-                        <div class="skill-item" data-skill="Unity">
-                            <div class="skill-icon">U</div>
-                            <span class="skill-name">Unity</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="90"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="Blender">
-                            <div class="skill-icon">Blender</div>
-                            <span class="skill-name">Blender</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="70"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="VR">
-                            <div class="skill-icon">VR</div>
-                            <span class="skill-name">VR</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="70"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="AR">
-                            <div class="skill-icon">AR</div>
-                            <span class="skill-name">AR</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="85"></div>
-                            </div>
-                        </div>
-                    </div>
+                <p class="skills-description">I craft an end-to-end design process that spans my skills in software design, from system architecture and interaction design to intuitive interfaces and scalable digital experiences, with a high standard of usability, functionality, and visual precision.</p>
+            </div>
+            <div class="skills-list">
+                <div class="skill-group">
+                    <h3 class="skill-group-title">Programming Languages <span class="skill-group-count">(01)</span></h3>
+                    <div class="skill-row"><span class="skill-row-name">Java/Spring Boot</span><span class="skill-row-index">1</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Python</span><span class="skill-row-index">2</span></div>
+                    <div class="skill-row"><span class="skill-row-name">C++/C#</span><span class="skill-row-index">3</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Golang</span><span class="skill-row-index">4</span></div>
+                    <div class="skill-row"><span class="skill-row-name">JavaScript</span><span class="skill-row-index">5</span></div>
+                    <div class="skill-row"><span class="skill-row-name">MySQL</span><span class="skill-row-index">6</span></div>
                 </div>
 
-                <div class="skill-category">
-                    <h3>Web Technologies</h3>
-                    <div class="skill-items">
-                        <div class="skill-item" data-skill="React">
-                            <div class="skill-icon">R</div>
-                            <span class="skill-name">React</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="85"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="Node.js">
-                            <div class="skill-icon">N</div>
-                            <span class="skill-name">Node.js</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="70"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="Three.js">
-                            <div class="skill-icon">3D</div>
-                            <span class="skill-name">Three.js</span>
-                            <div class="skill-level">
-                                <div class="skill-bar" data-level="65"></div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="skill-group">
+                    <h3 class="skill-group-title">Game & Web Development <span class="skill-group-count">(02)</span></h3>
+                    <div class="skill-row"><span class="skill-row-name">Unity</span><span class="skill-row-index">1</span></div>
+                    <div class="skill-row"><span class="skill-row-name">VR/AR</span><span class="skill-row-index">2</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Blender</span><span class="skill-row-index">3</span></div>
+                    <div class="skill-row"><span class="skill-row-name">React</span><span class="skill-row-index">4</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Node.js</span><span class="skill-row-index">5</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Three.js</span><span class="skill-row-index">6</span></div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group-title">Cloud & AI Technologies <span class="skill-group-count">(03)</span></h3>
+                    <div class="skill-row"><span class="skill-row-name">Docker</span><span class="skill-row-index">1</span></div>
+                    <div class="skill-row"><span class="skill-row-name">Kubernetes</span><span class="skill-row-index">2</span></div>
+                    <div class="skill-row"><span class="skill-row-name">AWS</span><span class="skill-row-index">3</span></div>
                 </div>
             </div>
         </div>

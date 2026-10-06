@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Huong Tran (Jenny)</title>
     <meta name="description" content="Interactive portfolio of Huong Tran (Jenny)">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/index-BuZ7g_-m.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BX7QalGc.css">
+  <script type="module" crossorigin src="/assets/index-CNp_oZZV.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BDxxurwH.css">
 </head>
 <body class="is-loading">
     <!-- Preloader -->
@@ -62,19 +62,16 @@
             <div class="cyber-lines"></div>
         </div>
         <div class="hero-content">
-                            <div class="hero-text">
-                    <h1 class="hero-title">
-                        <span class="title-line cyber-text">Hello, I'm</span>
-                        <span class="title-name">Jenny</span>
-                    </h1>
-                </div>
-                <div class="hero-visual">
-                    <!-- 3D Canvas will be centered here -->
-                </div>
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-line cyber-text">Hello, I'm</span>
+                    <span class="title-name">Jenny</span>
+                </h1>
+            </div>
+            <div class="hero-visual"></div>
         </div>
         <div class="scroll-indicator">
             <div class="scroll-arrow"></div>
-            <span class="scroll-text">Scroll to explore</span>
         </div>
     </section>
 
@@ -93,7 +90,7 @@
             <span class="about-code-line">export default function App() {</span>
         </div>
         <div class="container">
-            <h2 class="section-title">About Me</h2>
+            <h2 class="section-title about-title" id="aboutTitle" aria-label="Hello, I'm Jenny"><span class="title-line">Hello, I'm</span><span class="title-name">Jenny</span></h2>
             <div class="about-content">
                 <div class="about-text">
                     <div class="about-cursor about-cursor--intro" id="aboutCursorIntro">
@@ -135,102 +132,90 @@
         <div class="container">
             <h2 class="section-title">Experience</h2>
         </div>
-        <div class="exp-gallery">
-            <div class="exp-window" id="expWindow">
-                <div class="exp-track" id="expTrack">
-                    <div class="exp-item active">
-                        <span class="exp-year">12 January - 30 August 2026</span>
-                        <h3 class="exp-role">Placement in Ericsson</h3>
-                        <p class="exp-description">Gain exposure to cloud-native technologies, orchestration systems, and Cloud RAN architectures with AI driven frameworks and participated in Infuse program mentorship.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Java</span>
-                            <span class="tech-tag">Go</span>
-                            <span class="tech-tag">Spring Framework</span>
-                            <span class="tech-tag">Cloud Native</span>
-                            <span class="tech-tag">AWS</span>
-                        </div>
+        <div class="tl-hint"><i class="fas fa-arrows-left-right" aria-hidden="true"></i> Drag to explore</div>
+        <div class="tl-window" id="tlWindow">
+            <div class="tl-line" aria-hidden="true"></div>
+            <div class="tl-track" id="tlTrack">
+                <div class="tl-item tl-up">
+                    <div class="tl-card">
+                        <span class="tl-date">12 January - 30 August 2026</span>
+                        <h3 class="tl-role">Placement in Ericsson</h3>
+                        <p class="tl-desc">Gain exposure to cloud-native technologies, orchestration systems, and Cloud RAN architectures with AI driven frameworks and participated in Infuse program mentorship.</p>
+                        <div class="tl-tech"><span class="tech-tag">Java</span><span class="tech-tag">Go</span><span class="tech-tag">Spring Framework</span><span class="tech-tag">Cloud Native</span><span class="tech-tag">AWS</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">04 - 09 May 2026</span>
-                        <h3 class="exp-role">SAP RUNEU Video Games and Social Transformation</h3>
-                        <p class="exp-description">A week of international experience and dwell game development. Team collaboration to understand disability needs, design inclusive gameplay experiences, and develop accessible game concepts tailored for targeted user profiles.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">Accessibility Research</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Placement in Ericsson"></button>
+                </div>
+                <div class="tl-item tl-down">
+                    <div class="tl-card">
+                        <span class="tl-date">04 - 09 May 2026</span>
+                        <h3 class="tl-role">SAP RUNEU Video Games and Social Transformation</h3>
+                        <p class="tl-desc">A week of international experience and dwell game development. Team collaboration to understand disability needs, design inclusive gameplay experiences, and develop accessible game concepts tailored for targeted user profiles.</p>
+                        <div class="tl-tech"><span class="tech-tag">Unity</span><span class="tech-tag">Accessibility Research</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">03 - 05 October 2025</span>
-                        <h3 class="exp-role">Nasa Space Apps Challenge - Hackathon</h3>
-                        <p class="exp-description">Participated in teams for a 48 Hours coding sessions and create Unity application about Meteor Impact using NASA real time resources.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Shaderlab</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="SAP RUNEU Video Games and Social Transformation"></button>
+                </div>
+                <div class="tl-item tl-up">
+                    <div class="tl-card">
+                        <span class="tl-date">03 - 05 October 2025</span>
+                        <h3 class="tl-role">Nasa Space Apps Challenge - Hackathon</h3>
+                        <p class="tl-desc">Participated in teams for a 48 Hours coding sessions and create Unity application about Meteor Impact using NASA real time resources.</p>
+                        <div class="tl-tech"><span class="tech-tag">C#</span><span class="tech-tag">Python</span><span class="tech-tag">Shaderlab</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">03 June - 29 August 2025</span>
-                        <h3 class="exp-role">Summer Internship in Ericsson</h3>
-                        <p class="exp-description">Learning development of enterprise applications and mentoring junior developers.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Java</span>
-                            <span class="tech-tag">Spring Framework</span>
-                            <span class="tech-tag">AWS</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Nasa Space Apps Challenge - Hackathon"></button>
+                </div>
+                <div class="tl-item tl-down">
+                    <div class="tl-card">
+                        <span class="tl-date">03 June - 29 August 2025</span>
+                        <h3 class="tl-role">Summer Internship in Ericsson</h3>
+                        <p class="tl-desc">Learning development of enterprise applications and mentoring junior developers.</p>
+                        <div class="tl-tech"><span class="tech-tag">Java</span><span class="tech-tag">Spring Framework</span><span class="tech-tag">AWS</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">January - March 2025</span>
-                        <h3 class="exp-role">Game Fleadh Competition</h3>
-                        <p class="exp-description">Working in teams and create a game with the theme "Small World".</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Summer Internship in Ericsson"></button>
+                </div>
+                <div class="tl-item tl-up">
+                    <div class="tl-card">
+                        <span class="tl-date">January - March 2025</span>
+                        <h3 class="tl-role">Game Fleadh Competition</h3>
+                        <p class="tl-desc">Working in teams and create a game with the theme "Small World".</p>
+                        <div class="tl-tech"><span class="tech-tag">Unity</span><span class="tech-tag">C#</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">May 2024</span>
-                        <h3 class="exp-role">Pro-a-thon Competition</h3>
-                        <p class="exp-description">Participated in a team competition about Education and Technology for the Disabilities. Created a prototype and design for an app/website to enhance education for people who need extra help.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Figma</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Game Fleadh Competition"></button>
+                </div>
+                <div class="tl-item tl-down">
+                    <div class="tl-card">
+                        <span class="tl-date">May 2024</span>
+                        <h3 class="tl-role">Pro-a-thon Competition</h3>
+                        <p class="tl-desc">Participated in a team competition about Education and Technology for the Disabilities. Created a prototype and design for an app/website to enhance education for people who need extra help.</p>
+                        <div class="tl-tech"><span class="tech-tag">Figma</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">January - August 2024</span>
-                        <h3 class="exp-role">Part Time Coder and Animator at InfiniteKidz StartUp</h3>
-                        <p class="exp-description">Creating 2D animations for children's educational apps. Developed a game called Whisker Adventure and uploaded the draft version onto itch.io, with a Play Store version in progress.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Pro-a-thon Competition"></button>
+                </div>
+                <div class="tl-item tl-up">
+                    <div class="tl-card">
+                        <span class="tl-date">January - August 2024</span>
+                        <h3 class="tl-role">Part Time Coder and Animator at InfiniteKidz StartUp</h3>
+                        <p class="tl-desc">Creating 2D animations for children's educational apps. Developed a game called Whisker Adventure and uploaded the draft version onto itch.io, with a Play Store version in progress.</p>
+                        <div class="tl-tech"><span class="tech-tag">Unity</span><span class="tech-tag">C#</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">25 November 2023</span>
-                        <h3 class="exp-role">Galway Game Jam</h3>
-                        <p class="exp-description">Participated in teams with other members to create a simple game. Learned basic Unity with C#, Krita for graphics, problem solving and self improvement.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Unity</span>
-                            <span class="tech-tag">C#</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Part Time Coder and Animator at InfiniteKidz StartUp"></button>
+                </div>
+                <div class="tl-item tl-down">
+                    <div class="tl-card">
+                        <span class="tl-date">25 November 2023</span>
+                        <h3 class="tl-role">Galway Game Jam</h3>
+                        <p class="tl-desc">Participated in teams with other members to create a simple game. Learned basic Unity with C#, Krita for graphics, problem solving and self improvement.</p>
+                        <div class="tl-tech"><span class="tech-tag">Unity</span><span class="tech-tag">C#</span></div>
                     </div>
-
-                    <div class="exp-item">
-                        <span class="exp-year">July - August 2022</span>
-                        <h3 class="exp-role">Infuse & Hackathon Program</h3>
-                        <p class="exp-description">Participated in individual and teamwork program and learned about IT, software design and Python languages.</p>
-                        <div class="exp-tech">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">HTML</span>
-                        </div>
+                    <button type="button" class="tl-dot" aria-label="Galway Game Jam"></button>
+                </div>
+                <div class="tl-item tl-up">
+                    <div class="tl-card">
+                        <span class="tl-date">July - August 2022</span>
+                        <h3 class="tl-role">Infuse & Hackathon Program</h3>
+                        <p class="tl-desc">Participated in individual and teamwork program and learned about IT, software design and Python languages.</p>
+                        <div class="tl-tech"><span class="tech-tag">Python</span><span class="tech-tag">HTML</span></div>
                     </div>
+                    <button type="button" class="tl-dot" aria-label="Infuse & Hackathon Program"></button>
                 </div>
             </div>
         </div>
@@ -285,104 +270,112 @@
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
             <div class="projects-list">
-                <div class="project-card">
-                    <div class="project-number">#1</div>
-                    <div class="project-info">
-                        <h3>Grassland Resilience</h3>
-                        <p>A web application that monitors grassland health across Ireland using NASA satellite data.</p>
-                        <div class="project-tags">
-                            <span class="tech-tag">Javascript</span>
-                            <span class="tech-tag">Typescript</span>
-                            <span class="tech-tag">HTML</span>
-                            <span class="tech-tag">CSS</span>
-                        </div>
-                        <div class="modal-links">
-                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
+                <div class="project-card" data-tech="Javascript,Typescript,HTML,CSS">
+                    <div class="project-head">
+                    <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-1">
+                        <span class="project-title">Grassland Resilience</span>
+                    </button>
+                    <a href="https://github.com/JennyTran17" class="project-link" target="_blank" rel="noopener" aria-label="Open source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
+                    <aside class="project-panel" id="project-panel-1" aria-hidden="true">
+                        <div class="project-panel-inner">
+                            <p>A web application that monitors grassland health across Ireland using NASA satellite data.</p>
+                            <div class="modal-links">
+                                <a href="https://github.com/JennyTran17" class="modal-link" target="_blank" rel="noopener">
+                                    <i class="fab fa-github"></i>
+                                    Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-                <div class="project-card">
-                    <div class="project-number">#2</div>
-                    <div class="project-info">
-                        <h3>Offshore Wind Guardian</h3>
-                        <p>AI-powered monitoring system for offshore wind farms with BME280 sensors, 6-axis IMU, and hydrophone acoustic monitoring.</p>
-                        <div class="project-tags">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Shell</span>
-                            <span class="tech-tag">Makefile</span>
-                            <span class="tech-tag">Dockerfile</span>
-                        </div>
-                        <div class="modal-links">
-                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
+                <div class="project-card" data-tech="Python,Shell,Makefile,Dockerfile">
+                    <div class="project-head">
+                    <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-2">
+                        <span class="project-title">Offshore Wind Guardian</span>
+                    </button>
+                    <a href="https://github.com/JennyTran17" class="project-link" target="_blank" rel="noopener" aria-label="Open source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
+                    <aside class="project-panel" id="project-panel-2" aria-hidden="true">
+                        <div class="project-panel-inner">
+                            <p>AI-powered monitoring system for offshore wind farms with BME280 sensors, 6-axis IMU, and hydrophone acoustic monitoring.</p>
+                            <div class="modal-links">
+                                <a href="https://github.com/JennyTran17" class="modal-link" target="_blank" rel="noopener">
+                                    <i class="fab fa-github"></i>
+                                    Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-                <div class="project-card">
-                    <div class="project-number">#3</div>
-                    <div class="project-info">
-                        <h3>Voice Assistant</h3>
-                        <p>A prototype voice assistant with speech interaction and template-based responses, with a modular design for future expansion.</p>
-                        <div class="project-tags">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Flask</span>
-                            <span class="tech-tag">PostgreSQL</span>
-                            <span class="tech-tag">OpenAI</span>
-                        </div>
-                        <div class="modal-links">
-                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
+                <div class="project-card" data-tech="Python,Flask,PostgreSQL,OpenAI">
+                    <div class="project-head">
+                    <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-3">
+                        <span class="project-title">Voice Assistant</span>
+                    </button>
+                    <a href="https://github.com/JennyTran17" class="project-link" target="_blank" rel="noopener" aria-label="Open source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
+                    <aside class="project-panel" id="project-panel-3" aria-hidden="true">
+                        <div class="project-panel-inner">
+                            <p>A prototype voice assistant with speech interaction and template-based responses, with a modular design for future expansion.</p>
+                            <div class="modal-links">
+                                <a href="https://github.com/JennyTran17" class="modal-link" target="_blank" rel="noopener">
+                                    <i class="fab fa-github"></i>
+                                    Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-                <div class="project-card">
-                    <div class="project-number">#4</div>
-                    <div class="project-info">
-                        <h3>Weather App Platform</h3>
-                        <p>A full-stack weather notification app with weather API, Spring Boot, Kafka, and AWS.</p>
-                        <div class="project-tags">
-                            <span class="tech-tag">Spring Boot</span>
-                            <span class="tech-tag">Java</span>
-                            <span class="tech-tag">Kafka</span>
-                            <span class="tech-tag">AWS</span>
-                        </div>
-                        <div class="modal-links">
-                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
+                <div class="project-card" data-tech="Spring Boot,Java,Kafka,AWS">
+                    <div class="project-head">
+                    <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-4">
+                        <span class="project-title">Weather App Platform</span>
+                    </button>
+                    <a href="https://github.com/JennyTran17" class="project-link" target="_blank" rel="noopener" aria-label="Open source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
+                    <aside class="project-panel" id="project-panel-4" aria-hidden="true">
+                        <div class="project-panel-inner">
+                            <p>A full-stack weather notification app with weather API, Spring Boot, Kafka, and AWS.</p>
+                            <div class="modal-links">
+                                <a href="https://github.com/JennyTran17" class="modal-link" target="_blank" rel="noopener">
+                                    <i class="fab fa-github"></i>
+                                    Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
-                <div class="project-card">
-                    <div class="project-number">#5</div>
-                    <div class="project-info">
-                        <h3>Meteor Impact Simulation</h3>
-                        <p>A Unity application simulating meteor impacts using real-time NASA data resources.</p>
-                        <div class="project-tags">
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">Shaderlab</span>
-                            <span class="tech-tag">Python</span>
-                        </div>
-                        <div class="modal-links">
-                            <a href="https://github.com/JennyTran17" class="modal-link" target="_blank">
-                                <i class="fab fa-github"></i>
-                                Source Code
-                            </a>
-                        </div>
+                <div class="project-card" data-tech="C#,Shaderlab,Python">
+                    <div class="project-head">
+                    <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-5">
+                        <span class="project-title">Meteor Impact Simulation</span>
+                    </button>
+                    <a href="https://github.com/JennyTran17" class="project-link" target="_blank" rel="noopener" aria-label="Open source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
+                    <aside class="project-panel" id="project-panel-5" aria-hidden="true">
+                        <div class="project-panel-inner">
+                            <p>A Unity application simulating meteor impacts using real-time NASA data resources.</p>
+                            <div class="modal-links">
+                                <a href="https://github.com/JennyTran17" class="modal-link" target="_blank" rel="noopener">
+                                    <i class="fab fa-github"></i>
+                                    Source Code
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Typewriter Statement Section -->
+    <section id="statement" class="statement">
+        <h2 class="statement-text" aria-label="Most software works. But I design systems that make complex things feel simple.">
+            <span class="statement-ghost" aria-hidden="true">Most software works. But I design systems that make complex things feel simple.</span>
+            <span class="statement-typed" aria-hidden="true"><span id="typewriterText"></span><span class="statement-cursor"></span></span>
+        </h2>
+    </section>
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
@@ -391,7 +384,7 @@
         </div>
         <div class="container">
             <div class="contact-cta" id="contactCta">
-                <h2 class="contact-cta-title">Most software works. I design systems that make complex things feel simple. <br>Let's work together</h2>
+                <h2 class="contact-cta-title">Let's Work Together</h2>
                 <button type="button" class="contact-cta-btn" id="startProjectBtn">
                     Contact
                     <i class="fas fa-arrow-right"></i>
@@ -400,7 +393,6 @@
 
             <div class="contact-content" id="contactContent" hidden>
                 <div class="contact-info">
-                    <h3>Let's Work Together</h3>
                     <p>I'm always interested in new opportunities and exciting projects. Whether you have a question or just want to say hi, feel free to reach out!</p>
                     <div class="contact-methods">
                         <div class="contact-method">
@@ -445,7 +437,7 @@
                                 <i class="fas fa-paper-plane"></i>
                                 Send Message
                             </button>
-                            <a href="https://drive.google.com/file/d/10kr5Svr0sEVP_VZqT6CYyGCr2T7bbFzj/view?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener">
+                            <a href="https://drive.google.com/drive/folders/119hYK1ARV1T9DRFNSlhvcI6bS7xq7SeS?usp=sharing" class="btn btn-primary" target="_blank" rel="noopener">
                                 <i class="fas fa-file-download"></i>
                                 Download CV
                             </a>

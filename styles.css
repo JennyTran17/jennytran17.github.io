@@ -412,75 +412,182 @@ body.is-loading {
 
 /* Experience Section */
 .timeline {
-    padding: 6rem 0 0;
+    padding: 6rem 0 4rem;
     background: var(--bg-secondary);
     position: relative;
 }
 
-.exp-gallery {
-    max-width: 750px;
-    margin: 3rem auto 0;
-    padding: 0 2rem;
+/* Horizontal drag timeline: a centre line with a dot per event, cards alternate above/below */
+.tl-hint {
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
 }
 
-.exp-window {
+.tl-window {
     position: relative;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+    margin-top: 1rem;
+    height: 620px;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
 }
 
-.exp-track {
+.tl-window.dragging {
+    cursor: grabbing;
+}
+
+.tl-track {
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: max-content;
     will-change: transform;
 }
 
-.exp-item {
+/* the centre line: pinned to the window so it is always visible while the track moves */
+.tl-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    opacity: 0.55;
+    box-shadow: 0 0 10px rgba(255, 0, 128, 0.45);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.tl-item {
+    position: relative;
+    flex: 0 0 var(--tl-item-w, 320px);
+    height: 100%;
+}
+
+.tl-dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    background: var(--bg-secondary);
+    transform: translate(-50%, -50%) scale(0.8);
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tl-dot:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.tl-item.active .tl-dot {
+    background: var(--primary-color);
+    transform: translate(-50%, -50%) scale(1.5);
+    box-shadow: var(--neon-glow);
+}
+
+.tl-card {
+    position: absolute;
+    left: 50%;
+    width: min(500px, 82vw);
+    max-height: calc(50% - 3rem);
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding: 2rem 2.5rem;
-    border-bottom: 1px solid var(--border-color);
-    opacity: 0.4;
-    transform: scale(0.88);
-    /* scale/opacity are driven per scroll frame by JS (initExperienceGallery) so they
-       stay in sync with the track position; a CSS transition here would fight it and lag. */
+    gap: 0.5rem;
+    padding: 1.4rem 1.6rem;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    opacity: 0.45;
+    transform: translateX(-50%) scale(0.94);
+    transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.exp-item.active {
+.tl-up .tl-card {
+    bottom: calc(50% + 2.2rem);
+    transform-origin: bottom center;
+}
+
+.tl-down .tl-card {
+    top: calc(50% + 2.2rem);
+    transform-origin: top center;
+}
+
+/* stem connecting the card to its dot */
+.tl-card::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: 2.2rem;
+    background: var(--border-color);
+    transition: background 0.4s ease;
+}
+
+.tl-up .tl-card::after {
+    top: 100%;
+}
+
+.tl-down .tl-card::after {
+    bottom: 100%;
+}
+
+.tl-item.active .tl-card {
     opacity: 1;
-    transform: scale(1.08);
+    transform: translateX(-50%) scale(1);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg), var(--neon-glow);
 }
 
-.exp-year {
+.tl-item.active .tl-card::after {
+    background: var(--primary-color);
+}
+
+.tl-date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
     color: var(--primary-color);
 }
 
-.exp-role {
+.tl-role {
     margin: 0;
-    font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
     color: var(--text-primary);
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
-.exp-description {
+.tl-desc {
     margin: 0;
     font-size: 0.9rem;
+    line-height: 1.5;
     color: var(--text-secondary);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
-.exp-tech {
+.tl-tech {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
+}
+
+@media (max-width: 768px) {
+    .tl-window {
+        height: 680px;
+    }
+    .tl-item {
+        flex-basis: var(--tl-item-w, 280px);
+    }
 }
 
 .tech-tag {
@@ -793,7 +900,7 @@ body.is-loading {
 
 /* Projects Section - Gallery Style */
 .projects {
-    padding: 6rem 0;
+    padding: 6rem 0 12rem;
     background: var(--bg-primary);
 }
 
@@ -1208,16 +1315,6 @@ body.is-loading {
         max-width: calc(100vw - 4rem);
     }
 
-    /* Experience gallery mobile adjustments */
-    .exp-gallery {
-        padding: 0 1rem;
-    }
-
-    .exp-item {
-        gap: 0.35rem;
-        padding: 1.5rem;
-    }
-
     .modal-content {
         width: 95%;
         margin: 10% auto;
@@ -1379,14 +1476,6 @@ body.is-loading {
     animation: bounce 2s infinite;
 }
 
-.scroll-text {
-    color: var(--primary-color);
-    font-size: 0.875rem;
-    font-family: 'JetBrains Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -1469,63 +1558,97 @@ body.is-loading {
     margin-top: 0.25rem;
 }
 
+/* Projects: minimal hairline index, hover dims siblings + trailing preview, click slides a detail panel out */
 .projects-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
+    border-top: 1px solid var(--border-color);
 }
 
 .project-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    z-index: 1;
+    border-bottom: 1px solid var(--border-color);
+    transition: opacity 0.35s ease;
 }
 
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--gradient-primary);
-    border-radius: 4px 0 0 4px;
+.project-card.active {
+    z-index: 3;
 }
 
-.project-card:hover {
-    border-color: var(--primary-color);
-    transform: translateX(8px);
-    box-shadow: var(--shadow-lg), var(--neon-glow);
+/* Dim everything except the row under the cursor */
+.projects-list.hovering .project-card:not(.hovered):not(.active) {
+    opacity: 0.3 !important; /* beats the inline opacity set by the scroll reveal */
 }
 
-.project-number {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    font-family: 'JetBrains Mono', monospace;
-    opacity: 0.5;
-    min-width: 60px;
+.project-head {
+    display: flex;
+    align-items: stretch;
 }
 
-.project-info h3 {
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 1.3rem;
-}
-
-.project-info p {
+.project-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
     color: var(--text-secondary);
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.project-link:hover,
+.project-card.hovered .project-link {
+    color: var(--primary-color);
+}
+
+.project-link:hover {
+    transform: translate(3px, -3px);
+}
+
+.project-main {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.6rem 0.5rem;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), padding 0.4s ease, color 0.3s ease,
+        background 0.3s ease;
+}
+
+.project-main:hover,
+.project-card.active .project-main {
+    color: var(--text-primary);
+    padding-left: 1.5rem;
+    background: linear-gradient(90deg, rgba(255, 0, 128, 0.12), transparent 70%);
+}
+
+.project-title {
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    /* two-tone fill: pink wipes in from the left on hover */
+    background: linear-gradient(90deg, var(--primary-color) 50%, var(--text-secondary) 50%) 100% 0 / 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    transition: background-position 1.3s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.project-main:hover .project-title,
+.project-card.hovered .project-title,
+.project-card.active .project-title {
+    background-position: 0 0;
 }
 
 .project-tags {
@@ -1534,12 +1657,258 @@ body.is-loading {
     gap: 0.5rem;
 }
 
+/* Detail panel: extends downwards from the row and grows to fit all content */
+.project-panel {
+    height: 0;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
+}
+
+.project-card.active .project-panel {
+    height: var(--panel-h, auto);
+    border-top-color: var(--primary-color);
+}
+
+.project-panel-inner {
+    padding: 1.5rem 0.5rem 2rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    max-width: 760px;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+.project-card.active .project-panel-inner {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.15s;
+}
+
+.project-panel-inner h3 {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.project-panel-inner p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Cursor-trailing preview card */
+.project-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    width: max-content;
+    max-width: 380px;
+    padding: 0.7rem 0.8rem;
+    display: flex;
+    border-radius: 14px;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    background:
+        linear-gradient(rgba(255, 0, 128, 0.18) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(255, 0, 128, 0.18) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(135deg, #1a0010, #000);
+    border: 1px solid var(--primary-color);
+    box-shadow: var(--neon-glow);
+    transition: opacity 0.25s ease;
+}
+
+.project-preview.show {
+    opacity: 1;
+}
+
+.project-preview-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.project-preview-tags span {
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 999px;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: rgba(255, 0, 128, 0.12);
+}
+
+@media (max-width: 1000px) {
+    .project-preview {
+        display: none;
+    }
+}
+
 @media (max-width: 480px) {
-    .project-card {
-        flex-direction: column;
-        gap: 0.5rem;
+    .project-main {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
-    .project-number {
-        font-size: 1.5rem;
+}
+
+/* Typewriter statement: pink block, black pixel-mono text */
+.statement {
+    background: #b80059; /* deeper pink than --primary-color; darker still drops black-text contrast below 3:1 */
+    color: #000;
+    padding: 5rem 2rem;
+    margin-bottom: 12rem; /* gap before the contact section */
+    display: flex;
+    justify-content: center;
+}
+
+.statement-text {
+    position: relative;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0;
+    font-family: 'VT323', 'JetBrains Mono', monospace;
+    font-weight: 400;
+    font-size: clamp(2rem, 5.5vw, 4.2rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    -webkit-font-smoothing: none;
+}
+
+/* invisible full text reserves the final height so the layout doesn't jump while typing */
+.statement-ghost {
+    display: block;
+    visibility: hidden;
+}
+
+.statement-typed {
+    position: absolute;
+    inset: 0;
+}
+
+.statement-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.85em;
+    margin-left: 0.08em;
+    background: #000;
+    vertical-align: -0.05em;
+    animation: statement-blink 0.9s steps(1) infinite;
+}
+
+@keyframes statement-blink {
+    50% { opacity: 0; }
+}
+
+/* Hero: fog layer + editorial layout */
+.hero-fog {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* name block moves to the bottom-left instead of floating at the bottom centre */
+.hero-content {
+    align-items: flex-start;
+    position: static; /* lets .hero-text anchor to the hero itself, not the centred 1400px box */
+}
+
+.hero-text {
+    left: 3rem;
+    bottom: 2.5rem;
+    transform: none;
+    text-align: left;
+}
+
+.hero-text::before {
+    display: none;
+}
+
+.title-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.title-name {
+    font-size: clamp(4.5rem, 14vw, 11rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+}
+
+/* "Hello, I'm Jenny" on one line, smaller */
+.hero-title,
+.about-title {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0;
+}
+
+.hero-title .title-line,
+.about-title .title-line {
+    margin: 0;
+    font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+    white-space: nowrap;
+}
+
+.hero-title .title-name,
+.about-title .title-name {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+    /* sit above the scroll arrow (which clears the bottom nav at 5.5rem) */
+    .hero-text {
+        left: 1.25rem;
+        bottom: 9.5rem;
     }
+}
+
+/* "Hello, I'm Jenny" travels from the hero to the About title as you scroll (initTitleTravel) */
+.about-title {
+    justify-content: center;
+}
+
+/* at the About title Jenny shrinks on the way until she visually matches "Hello, I'm"
+   (that label is uppercase mono, so it needs a larger size to look the same height) */
+.about-title .title-name {
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+}
+
+/* the real title stays hidden until the travelling copy has landed on it */
+.about-title:not(.landed) > span {
+    visibility: hidden;
+}
+
+.about-title::after {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.about-title.landed::after {
+    opacity: 1;
+}
+
+.hero-text.title-travel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    animation: none;
+    z-index: 40;
+    pointer-events: none;
+    will-change: transform;
 }

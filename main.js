@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initAboutParallax();
     initTitleTravel();
     initSkillsProgress();
+    initAchievements();
     initSkillsTitleReveal();
     initProjectCards();
     initContactForm();
@@ -1519,4 +1520,19 @@ function initTitleTravel() {
     // the title's width changes once the web fonts load, so re-measure then
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
     window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+// Achievement cards rise in one after another as the grid scrolls into view
+function initAchievements() {
+    const cards = document.querySelectorAll('.ach-card');
+    if (!cards.length) return;
+    gsap.from(cards, {
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.12,
+        clearProps: 'transform,opacity',   // hand control back to the CSS hover lift
+        scrollTrigger: { trigger: '.ach-grid', start: 'top 85%', once: true }
+    });
 }

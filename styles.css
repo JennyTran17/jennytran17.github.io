@@ -900,7 +900,7 @@ body.is-loading {
 
 /* Projects Section - Gallery Style */
 .projects {
-    padding: 6rem 0 12rem;
+    padding: 6rem 0 8rem;
     background: var(--bg-primary);
 }
 
@@ -1911,4 +1911,140 @@ body.is-loading {
     z-index: 40;
     pointer-events: none;
     will-change: transform;
+}
+
+/* Achievements & Certificates: one card per year, two per row */
+.achievements {
+    padding: 8rem 0;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+}
+
+.ach-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 4rem auto 0;
+}
+
+.ach-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.75rem;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ach-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg), var(--neon-glow);
+}
+
+.ach-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ach-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--primary-color);
+    text-shadow: var(--neon-text-glow);
+}
+
+.ach-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.ach-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.ach-item {
+    position: relative;
+    padding-left: 1.25rem;
+}
+
+.ach-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-color);
+}
+
+.ach-month {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.ach-title {
+    margin: 0.1rem 0 0.2rem;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.ach-desc {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+    .achievements {
+        padding: 5rem 0;
+    }
+    .ach-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}
+
+/* About: education pop-up message */
+.about-edu-course {
+    font-weight: 600;
+}
+
+.about-edu-college {
+    margin-top: 0.25rem;
+    color: var(--text-secondary);
+}
+
+.about-edu-gpa {
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.about-edu-note {
+    color: var(--text-secondary);
 }

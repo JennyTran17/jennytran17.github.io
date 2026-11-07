@@ -10,9 +10,9 @@
     <meta property="og:description" content="Portfolio of Huong Tran (Jenny), Software Design (VR &amp; Gaming) student at TUS. AI security, cloud and game projects, Ericsson internships, award-winning hackathons.">
     <meta property="og:url" content="https://jennytran17.github.io/">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/index-DvDW_g5J.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BodTHgEk.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="module" crossorigin src="/assets/index-Di6NmSp0.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DNWfJ9bC.css">
 </head>
 <body class="is-loading">
     <!-- Preloader -->
@@ -62,17 +62,18 @@
     <section id="home" class="hero">
         <div class="hero-background">
             <canvas id="hero-canvas"></canvas>
-            <div class="cyber-grid"></div>
-            <div class="cyber-lines"></div>
         </div>
         <div class="hero-content">
             <div class="hero-text">
+                <p class="hero-portfolio">Portfolio</p>
                 <h1 class="hero-title">
                     <span class="title-line cyber-text">Hello, I'm</span>
                     <span class="title-name">Jenny</span>
                 </h1>
             </div>
-            <div class="hero-visual"></div>
+        </div>
+        <div class="look-pad" id="lookPad" role="group" tabindex="0" title="Drag to look around" aria-label="Look around the cube. Drag the knob, or use the arrow keys.">
+            <span class="look-pad-knob"></span>
         </div>
         <div class="scroll-indicator">
             <div class="scroll-arrow"></div>
@@ -584,12 +585,11 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
-        <div class="contact-matrix-bg" aria-hidden="true">
-            <canvas id="matrixCanvas"></canvas>
-        </div>
         <div class="container">
             <div class="contact-cta" id="contactCta">
-                <h2 class="contact-cta-title">Let's Work Together</h2>
+                <h2 class="contact-cta-title">
+                    <span class="contact-title-line"><span class="contact-title-text">Let's Work Together</span><span class="contact-title-mask"></span></span>
+                </h2>
                 <button type="button" class="contact-cta-btn" id="startProjectBtn">
                     Contact
                     <i class="fas fa-arrow-right"></i>
@@ -669,7 +669,7 @@
             </div>
         </div>
     </footer>
-
+
 
 </body>
 </html>

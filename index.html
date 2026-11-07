@@ -61,17 +61,18 @@
     <section id="home" class="hero">
         <div class="hero-background">
             <canvas id="hero-canvas"></canvas>
-            <div class="cyber-grid"></div>
-            <div class="cyber-lines"></div>
         </div>
         <div class="hero-content">
             <div class="hero-text">
+                <p class="hero-portfolio">Portfolio</p>
                 <h1 class="hero-title">
                     <span class="title-line cyber-text">Hello, I'm</span>
                     <span class="title-name">Jenny</span>
                 </h1>
             </div>
-            <div class="hero-visual"></div>
+        </div>
+        <div class="look-pad" id="lookPad" role="group" tabindex="0" title="Drag to look around" aria-label="Look around the cube. Drag the knob, or use the arrow keys.">
+            <span class="look-pad-knob"></span>
         </div>
         <div class="scroll-indicator">
             <div class="scroll-arrow"></div>
@@ -583,12 +584,11 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
-        <div class="contact-matrix-bg" aria-hidden="true">
-            <canvas id="matrixCanvas"></canvas>
-        </div>
         <div class="container">
             <div class="contact-cta" id="contactCta">
-                <h2 class="contact-cta-title">Let's Work Together</h2>
+                <h2 class="contact-cta-title">
+                    <span class="contact-title-line"><span class="contact-title-text">Let's Work Together</span><span class="contact-title-mask"></span></span>
+                </h2>
                 <button type="button" class="contact-cta-btn" id="startProjectBtn">
                     Contact
                     <i class="fas fa-arrow-right"></i>

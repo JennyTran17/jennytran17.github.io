@@ -255,9 +255,15 @@ body.is-loading {
     align-items: flex-end;
     gap: 1.85rem;
     list-style: none;
+    /* --nav-scale is driven by scroll (initSideNav): larger over the hero, smaller after it */
+    transform: scale(var(--nav-scale, 1));
+    transform-origin: right center;
 }
 
 .side-nav-link {
+    position: relative;
+    isolation: isolate; /* keeps the black pill behind the text but above the page */
+    --nav-bg: 1;        /* 1 = black pill fully showing, 0 = collapsed (animated by initSideNav) */
     display: inline-block;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
@@ -267,6 +273,18 @@ body.is-loading {
     text-decoration: none;
     transform-origin: right center;
     transition: color 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Black pill behind each nav label over the hero; it shrinks toward the right edge once the hero is left */
+.side-nav-link::before {
+    content: '';
+    position: absolute;
+    inset: -0.35em -0.7em;
+    z-index: -1;
+    background: #000;
+    border-radius: 4px;
+    transform: scaleX(var(--nav-bg));
+    transform-origin: right center;
 }
 
 .side-nav-link:hover,
@@ -390,14 +408,6 @@ body.is-loading {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-}
-
-.hero-visual {
-    position: relative;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .hero-instructions {
@@ -1018,19 +1028,6 @@ body.is-loading {
     overflow: hidden;
 }
 
-.contact-matrix-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.4;
-}
-
-.contact-matrix-bg canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
 .contact .container {
     position: relative;
     z-index: 1;
@@ -1047,6 +1044,26 @@ body.is-loading {
     line-height: 1.35;
     margin-bottom: 2.5rem;
     color: var(--text-primary);
+}
+
+/* Same title reveal as Skills & Expertise: a pink block covers each line, then slides away */
+.contact-title-line {
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap; /* "Let's Work Together" always stays on one line */
+}
+
+.contact-title-text {
+    display: inline-block;
+}
+
+.contact-title-mask {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-primary);
 }
 
 .contact-cta-btn {
@@ -1292,11 +1309,16 @@ body.is-loading {
         justify-content: space-between;
         gap: 0.25rem;
         width: 100%;
+        transform: none;
     }
 
     .side-nav-link {
         font-size: 0.62rem;
         transform-origin: center;
+    }
+
+    .side-nav-link::before {
+        display: none;
     }
 
     /* Give the footer clearance above the fixed bottom nav */
@@ -1406,44 +1428,6 @@ body.is-loading {
 }
 
 /* Cyberpunk Elements */
-.cyber-grid {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        linear-gradient(rgba(255, 0, 128, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 0, 128, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: gridMove 20s linear infinite;
-    z-index: 1;
-}
-
-.cyber-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(90deg, transparent 49%, rgba(255, 0, 128, 0.3) 50%, transparent 51%),
-        linear-gradient(transparent 49%, rgba(255, 0, 128, 0.3) 50%, transparent 51%);
-    background-size: 100px 100px;
-    animation: linesMove 15s linear infinite;
-    z-index: 1;
-}
-
-@keyframes gridMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
-}
-
-@keyframes linesMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-100px, -100px); }
-}
-
 .cyber-text {
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 2px;
@@ -1524,15 +1508,6 @@ body.is-loading {
     background: var(--gradient-primary);
     border-radius: 2px;
     box-shadow: var(--neon-glow);
-}
-
-.hero-visual {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .stat-item {
@@ -1806,25 +1781,29 @@ body.is-loading {
     50% { opacity: 0; }
 }
 
-/* Hero: fog layer + editorial layout */
-.hero-fog {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    pointer-events: none;
+/* Hero: wireframe background only; the title sits vertically centred on the left, the nav is big on the right */
+.hero {
+    --hero-left: 7vw; /* gap between the left edge of the screen and the title */
+    user-select: none; /* a click-drag across the hero shouldn't highlight the title text */
+    -webkit-user-select: none;
 }
 
-/* name block moves to the bottom-left instead of floating at the bottom centre */
 .hero-content {
-    align-items: flex-start;
-    position: static; /* lets .hero-text anchor to the hero itself, not the centred 1400px box */
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0 0 0 var(--hero-left);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 0;
+    text-align: left;
 }
 
 .hero-text {
-    left: 3rem;
-    bottom: 2.5rem;
+    position: static;
     transform: none;
     text-align: left;
 }
@@ -1846,7 +1825,7 @@ body.is-loading {
     letter-spacing: -0.03em;
 }
 
-/* "Hello, I'm Jenny" on one line, smaller */
+/* "Hello, I'm Jenny" on one line */
 .hero-title,
 .about-title {
     display: flex;
@@ -1870,26 +1849,70 @@ body.is-loading {
     letter-spacing: -0.02em;
 }
 
+/* Hero: a big monospace PORTFOLIO with the smaller "Hello, I'm Jenny" underneath it */
+.hero-portfolio {
+    margin: 0 0 0.9rem -0.09em; /* pulls the big P's side-bearing back so it lines up with the line below */
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(255, 0, 128, 0.5));
+    cursor: inherit;
+}
+
+.hero-title .title-line {
+    font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+}
+
+.hero-title .title-name {
+    font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+}
+
 @media (max-width: 768px) {
-    /* sit above the scroll arrow (which clears the bottom nav at 5.5rem) */
-    .hero-text {
-        left: 1.25rem;
-        bottom: 9.5rem;
+    .hero {
+        --hero-left: 6vw;
     }
 }
 
-/* "Hello, I'm Jenny" travels from the hero to the About title as you scroll (initTitleTravel) */
+/* Greeting bubble that follows the cursor while hovering PORTFOLIO in the hero (initJennyGreeting) */
+.jenny-greeting {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    padding: 0.45rem 0.9rem;
+    max-width: 14rem;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--primary-color);
+    border-radius: 14px 14px 14px 4px;
+    box-shadow: var(--neon-glow);
+    font-size: 0.85rem;
+    line-height: 1.35;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* "Hello, I'm Jenny" slides down from the hero to this About heading as you scroll (initTitleTravel) */
 .about-title {
     justify-content: center;
 }
 
-/* at the About title Jenny shrinks on the way until she visually matches "Hello, I'm"
+/* Jenny shrinks on the way until she visually matches "Hello, I'm"
    (that label is uppercase mono, so it needs a larger size to look the same height) */
 .about-title .title-name {
     font-size: clamp(1.3rem, 2.5vw, 1.75rem);
 }
 
-/* the real title stays hidden until the travelling copy has landed on it */
+/* the real heading stays hidden until the travelling copy has landed on it */
 .about-title:not(.landed) > span {
     visibility: hidden;
 }
@@ -1903,14 +1926,11 @@ body.is-loading {
     opacity: 1;
 }
 
-.hero-text.title-travel {
+.title-travel {
     position: fixed;
     left: 0;
     top: 0;
-    right: auto;
-    bottom: auto;
-    transform: none;
-    animation: none;
+    margin: 0;
     z-index: 40;
     pointer-events: none;
     will-change: transform;
@@ -2050,4 +2070,79 @@ body.is-loading {
 
 .about-edu-note {
     color: var(--text-secondary);
+}
+
+/* Look pad: a small round "controller" in the hero. Push the knob and the view turns that way. */
+.look-pad {
+    position: absolute;
+    left: var(--hero-left);
+    bottom: 2rem;
+    z-index: 10;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 0, 128, 0.7);
+    background: radial-gradient(circle, rgba(255, 0, 128, 0.1), rgba(0, 0, 0, 0.65) 72%);
+    box-shadow: 0 0 18px rgba(255, 0, 128, 0.25), inset 0 0 14px rgba(0, 0, 0, 0.8);
+    touch-action: none; /* a finger on the pad steers; a finger anywhere else scrolls the page */
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* faint crosshair so the pad reads as a stick */
+.look-pad::before,
+.look-pad::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 0, 128, 0.28);
+}
+
+.look-pad::before {
+    left: 14%;
+    right: 14%;
+    top: 50%;
+    height: 1px;
+}
+
+.look-pad::after {
+    top: 14%;
+    bottom: 14%;
+    left: 50%;
+    width: 1px;
+}
+
+.look-pad-knob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 38px;
+    height: 38px;
+    margin: -19px 0 0 -19px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    box-shadow: var(--neon-glow);
+    transform: translate(var(--kx, 0px), var(--ky, 0px));
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1); /* springs back to the centre on release */
+}
+
+.look-pad.is-active {
+    cursor: grabbing;
+}
+
+.look-pad.is-active .look-pad-knob {
+    transition: none;
+}
+
+.look-pad:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
+}
+
+/* Phones and other touch-only devices: the cube stays static, so there is no pad at all */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+    .look-pad {
+        display: none;
+    }
 }

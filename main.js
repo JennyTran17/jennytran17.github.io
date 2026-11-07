@@ -9,7 +9,6 @@ gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
 // Global variables
 let scene, camera, renderer, particles, animationId;
-let mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
@@ -29,15 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
     initAboutCursorEntrance();
     initAboutParallax();
     initTitleTravel();
+    initJennyGreeting();
     initSkillsProgress();
     initAchievements();
     initSkillsTitleReveal();
     initProjectCards();
     initContactForm();
     initTypewriter();
-    initFogReveal();
     initContactCta();
-    initContactMatrixBg();
+    initContactTitleReveal();
     initSideNav();
 
     // Refresh after fonts and images settle
@@ -264,6 +263,7 @@ function initThreeJS() {
     if (!canvas) return;
 
     // Scene setup
+    animationId = null; // null = no frame queued
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ 
@@ -275,15 +275,24 @@ function initThreeJS() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create interactive 3D playground
+    // Build the wireframe room the camera sits inside
     createInteractivePlayground();
     
     // Position camera
-    camera.position.z = 8;
+    camera.position.set(0, 0, ROOM.cameraZ);
+    camera.rotation.order = 'YXZ'; // yaw (look left/right) first, then pitch (up/down)
     
-    // Animation loop
-    animate();
-    
+    // Animation loop (paused while the hero is off screen)
+    const hero = document.getElementById('home');
+    if (hero) {
+        new IntersectionObserver((entries) => {
+            heroVisible = entries[0].isIntersecting;
+            if (heroVisible) requestRender();
+        }).observe(hero);
+        initLookPad();
+    }
+    animate(); // first frame; after this it only renders while the view is moving
+
     // Handle window resize
     window.addEventListener('resize', onWindowResize);
 }
@@ -293,54 +302,162 @@ function createInteractivePlayground() {
     createCyberGrid();
 }
 
+// The hero is the inside of a wireframe cube: six grid walls plus brighter edges. The camera stands
+// inside it (a little back from the middle) and the mouse turns your head: look left, right, up and
+// down to see the other walls, the floor and the ceiling.
+const ROOM = { half: 10, divisions: 12, major: 4, cameraZ: 4, maxYaw: 1.3, maxPitch: 0.95, padYawSpeed: 1.7, padPitchSpeed: 1.2 };
+let heroVisible = true;
+let lookYaw = 0, lookPitch = 0;         // where the camera is looking right now (eased)
+let targetYaw = 0, targetPitch = 0;     // where the look pad wants it to look
+const stick = { x: 0, y: 0 };           // look pad deflection, -1..1 (screen y: down is positive)
+let lastFrameTime = 0;
+
 function createCyberGrid() {
-    const gridGeometry = new THREE.BufferGeometry();
-    const gridMaterial = new THREE.LineBasicMaterial({ 
-        color: 0xff0080, 
-        transparent: true, 
-        opacity: 0.4 
-    });
-    
-    const gridPoints = [];
-    const gridSize = 25;
-    const gridStep = 1.5;
-    
-    // Vertical lines
-    for (let x = -gridSize; x <= gridSize; x += gridStep) {
-        gridPoints.push(x, -15, -15);
-        gridPoints.push(x, 15, -15);
-        gridPoints.push(x, -15, 15);
-        gridPoints.push(x, 15, 15);
+    const H = ROOM.half;
+    const step = (2 * H) / ROOM.divisions;
+    const minor = [], major = [];
+
+    // each face: the wall at +/-H on one axis, gridded along the other two axes
+    // (the outer ring of lines is skipped here; the cube's edges are drawn separately and brighter)
+    for (let k = 1; k < ROOM.divisions; k++) {
+        const t = -H + k * step;
+        const target = k % ROOM.major === 0 ? major : minor;
+        for (const side of [-H, H]) {
+            target.push(-H, t, side, H, t, side);   // front/back wall, line along x
+            target.push(t, -H, side, t, H, side);   // front/back wall, line along y
+            target.push(side, t, -H, side, t, H);   // left/right wall, line along z
+            target.push(side, -H, t, side, H, t);   // left/right wall, line along y
+            target.push(-H, side, t, H, side, t);   // floor/ceiling, line along x
+            target.push(t, side, -H, t, side, H);   // floor/ceiling, line along z
+        }
     }
-    
-    // Horizontal lines
-    for (let z = -gridSize; z <= gridSize; z += gridStep) {
-        gridPoints.push(-25, -15, z);
-        gridPoints.push(25, -15, z);
-        gridPoints.push(-25, 15, z);
-        gridPoints.push(25, 15, z);
-    }
-    
-    gridGeometry.setAttribute('position', new THREE.Float32BufferAttribute(gridPoints, 3));
-    const grid = new THREE.LineSegments(gridGeometry, gridMaterial);
-    scene.add(grid);
+
+    const make = (points, opacity) => {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+        const material = new THREE.LineBasicMaterial({ color: 0xff0080, transparent: true, opacity });
+        return new THREE.LineSegments(geometry, material);
+    };
+    scene.add(make(minor, 0.2));
+    scene.add(make(major, 0.45));
+
+    // the twelve edges of the cube
+    const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * H, 2 * H, 2 * H)),
+        new THREE.LineBasicMaterial({ color: 0xff2d95, transparent: true, opacity: 0.9 })
+    );
+    scene.add(edges);
+
+    // far walls fade slightly into the dark, which sells the depth
+    scene.fog = new THREE.Fog(0x000000, 12, 38);
 }
 
-// Removed floating orbs function
-
+// Renders only while the view is moving. At rest nothing is queued, so an idle hero costs no CPU.
 function animate() {
-    animationId = requestAnimationFrame(animate);
-    
-    const time = Date.now() * 0.001;
-    
-    // Dynamic scene movement based on mouse position with easing
-    const targetRotationY = mouseX * 0.00003;
-    const targetRotationX = mouseY * 0.00003;
-    
-    scene.rotation.y += (targetRotationY - scene.rotation.y) * 0.1;
-    scene.rotation.x += (targetRotationX - scene.rotation.x) * 0.1;
+    animationId = null;
+    if (!heroVisible) return; // the observer calls requestRender() when the hero comes back
 
+    const now = performance.now();
+    const dt = Math.min((now - lastFrameTime) / 1000 || 0.016, 0.05);
+    lastFrameTime = now;
+
+    // holding the look pad off-centre keeps turning the view in that direction
+    const stickActive = Math.abs(stick.x) > 0.02 || Math.abs(stick.y) > 0.02;
+    if (stickActive) {
+        targetYaw = Math.max(-ROOM.maxYaw, Math.min(ROOM.maxYaw, targetYaw - stick.x * ROOM.padYawSpeed * dt));
+        targetPitch = Math.max(-ROOM.maxPitch, Math.min(ROOM.maxPitch, targetPitch - stick.y * ROOM.padPitchSpeed * dt));
+    }
+
+    // ease toward where the pad wants to look
+    lookYaw += (targetYaw - lookYaw) * 0.14;
+    lookPitch += (targetPitch - lookPitch) * 0.14;
+    const settled = Math.abs(targetYaw - lookYaw) < 0.0004 && Math.abs(targetPitch - lookPitch) < 0.0004;
+    if (settled) { lookYaw = targetYaw; lookPitch = targetPitch; }
+
+    camera.rotation.y = lookYaw;
+    camera.rotation.x = lookPitch;
     renderer.render(scene, camera);
+
+    if (!settled || stickActive) animationId = requestAnimationFrame(animate);
+}
+
+function requestRender() {
+    if (animationId === null && heroVisible) {
+        lastFrameTime = performance.now();
+        animationId = requestAnimationFrame(animate);
+    }
+}
+
+// The look pad: a small round joystick. Push the knob toward a direction to turn that way (right =
+// look right, up = look up); let go and the knob springs back while the view stays where it is.
+// Arrow keys work too when the pad is focused. Not shown on phones, where the cube is static.
+function initLookPad() {
+    const pad = document.getElementById('lookPad');
+    const knob = pad && pad.querySelector('.look-pad-knob');
+    if (!pad || !knob) return;
+
+    let activeId = null;
+
+    const setKnob = (nx, ny, travel) => {
+        pad.style.setProperty('--kx', `${(nx * travel).toFixed(1)}px`);
+        pad.style.setProperty('--ky', `${(ny * travel).toFixed(1)}px`);
+    };
+
+    const steer = (e) => {
+        const r = pad.getBoundingClientRect();
+        const travel = r.width / 2 - knob.offsetWidth / 2; // how far the knob may leave the centre
+        let dx = e.clientX - (r.left + r.width / 2);
+        let dy = e.clientY - (r.top + r.height / 2);
+        const len = Math.hypot(dx, dy);
+        if (len > travel) { dx = (dx / len) * travel; dy = (dy / len) * travel; }
+        stick.x = dx / travel;
+        stick.y = dy / travel;
+        setKnob(stick.x, stick.y, travel);
+        requestRender();
+    };
+
+    const release = (e) => {
+        if (activeId === null || e.pointerId !== activeId) return;
+        activeId = null;
+        stick.x = 0; stick.y = 0;
+        pad.classList.remove('is-active');
+        setKnob(0, 0, 0);
+    };
+
+    pad.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        activeId = e.pointerId;
+        pad.classList.add('is-active');
+        try { pad.setPointerCapture(e.pointerId); } catch (err) { /* not capturable */ }
+        steer(e);
+    });
+    pad.addEventListener('pointermove', (e) => { if (e.pointerId === activeId) steer(e); });
+    pad.addEventListener('pointerup', release);
+    pad.addEventListener('pointercancel', release);
+
+    // On phones and touch-only devices the cube is static (the pad is hidden by CSS). If a window is
+    // narrowed to that size after the view was turned, put it back in the centre.
+    const staticMq = window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)');
+    const recentre = () => {
+        if (!staticMq.matches) return;
+        targetYaw = 0; targetPitch = 0;
+        stick.x = 0; stick.y = 0;
+        requestRender();
+    };
+    recentre();
+    staticMq.addEventListener('change', recentre);
+
+    // keyboard: arrow keys nudge the view
+    pad.addEventListener('keydown', (e) => {
+        const step = 0.2;
+        const moves = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+        const m = moves[e.key];
+        if (!m) return;
+        e.preventDefault();
+        targetYaw = Math.max(-ROOM.maxYaw, Math.min(ROOM.maxYaw, targetYaw + m[0]));
+        targetPitch = Math.max(-ROOM.maxPitch, Math.min(ROOM.maxPitch, targetPitch + m[1]));
+        requestRender();
+    });
 }
 
 function onWindowResize() {
@@ -350,15 +467,11 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    requestRender();
 }
 
-// Mouse movement for 3D interaction
+// Page-level listeners
 function initEventListeners() {
-    document.addEventListener('mousemove', (event) => {
-        mouseX = event.clientX - windowHalfX;
-        mouseY = event.clientY - windowHalfY;
-    });
-    
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -744,55 +857,27 @@ function initContactCta() {
     });
 }
 
-// Contact section background: a pink "digital rain" of code characters, canvas-driven
-function initContactMatrixBg() {
-    const canvas = document.getElementById('matrixCanvas');
-    const section = document.querySelector('.contact');
-    if (!canvas || !section) return;
+// "Let's Work Together": the pink block covering each line slides away as the section scrolls in,
+// like the Skills & Expertise title
+function initContactTitleReveal() {
+    const masks = document.querySelectorAll('.contact-title-mask');
+    if (!masks.length) return;
 
-    const ctx = canvas.getContext('2d');
-    const chars = '01$%#@+=*<>{}[]/\\';
-    const fontSize = 16;
-    let columns = 0;
-    let drops = [];
-    let rafId = null;
-    let lastFrameTime = 0;
-    const frameInterval = 110; // ms between updates - slows the fall + character flicker so it reads clearly
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.set(masks, { xPercent: -100 });
+        return;
+    }
 
-    const resize = () => {
-        canvas.width = section.offsetWidth;
-        canvas.height = section.offsetHeight;
-        columns = Math.max(1, Math.floor(canvas.width / fontSize));
-        drops = new Array(columns).fill(0).map(() => Math.random() * -50);
-    };
-
-    const draw = (time = 0) => {
-        rafId = requestAnimationFrame(draw);
-
-        if (time - lastFrameTime < frameInterval) return;
-        lastFrameTime = time;
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'rgba(255, 0, 128, 0.8)';
-        ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
-
-        drops.forEach((y, i) => {
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, i * fontSize, y * fontSize);
-            if (y * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            drops[i] += 0.3;
-        });
-    };
-
-    resize();
-    draw();
-    window.addEventListener('resize', () => {
-        cancelAnimationFrame(rafId);
-        resize();
-        draw();
+    gsap.to(masks, {
+        xPercent: -100,
+        duration: 1,
+        ease: 'power4.inOut',
+        stagger: 0.15,
+        scrollTrigger: {
+            trigger: '.contact-cta-title',
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+        }
     });
 }
 
@@ -823,6 +908,41 @@ function initSideNav() {
     });
 
     sections.forEach(section => observer.observe(section));
+
+    // Over the hero the nav is larger; it eases down to normal size as the hero scrolls away
+    // and stays there. (On phones the nav is a bottom bar and the CSS ignores --nav-scale.)
+    const list = document.querySelector('.side-nav-list');
+    const hero = document.getElementById('home');
+    if (list && hero) {
+        const NAV_SCALE_HERO = 2.1;
+        const setScale = (p) => list.style.setProperty('--nav-scale', (NAV_SCALE_HERO - (NAV_SCALE_HERO - 1) * p).toFixed(3));
+        setScale(0);
+        ScrollTrigger.create({
+            start: 0,
+            end: () => hero.offsetHeight * 0.9,
+            scrub: true,
+            onUpdate: (self) => setScale(self.progress),
+            onRefresh: (self) => setScale(self.progress)
+        });
+
+        // Each link has a black pill behind it over the hero. Once the hero is mostly scrolled
+        // away the pills collapse toward the right edge, top to bottom, and re-expand on the way back.
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const collapse = gsap.to(links, {
+            '--nav-bg': 0,
+            duration: reduce ? 0 : 0.55,
+            ease: 'power3.inOut',
+            stagger: reduce ? 0 : 0.06,
+            paused: true
+        });
+        ScrollTrigger.create({
+            trigger: hero,
+            start: 'bottom 50%',
+            onEnter: () => collapse.play(),
+            onLeaveBack: () => collapse.reverse()
+        });
+        collapse.progress(window.scrollY > hero.offsetHeight * 0.5 ? 1 : 0); // page loaded already scrolled
+    }
 }
 
 function showNotification(message, type = 'info') {
@@ -1010,462 +1130,14 @@ function initTypewriter() {
     }, { threshold: 0.3 }).observe(section);
 }
 
-// Hero fog: "BE CREATIVE / BE INTERESTING" is one 3D object hidden under blurry haze. The cursor
-// wipes the haze away and the words tilt/parallax toward the pointer. Letters can be grabbed and
-// thrown: they collide with (and knock loose) the other letters, float around inside the hero, and
-// each one eases back into place 9 seconds after it was last disturbed.
-function initFogReveal() {
-    const hero = document.getElementById('home');
-    const bg = hero && hero.querySelector('.hero-background');
-    if (!hero || !bg) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const view = document.createElement('canvas');
-    view.className = 'hero-fog';
-    view.setAttribute('aria-hidden', 'true');
-    bg.appendChild(view);
-
-    const grid = bg.querySelector('.cyber-grid');
-
-    const make = () => document.createElement('canvas');
-    const mask = make(), tmp = make(), brush = make();
-    const vctx = view.getContext('2d');
-    const mctx = mask.getContext('2d');
-    const tctx = tmp.getContext('2d');
-    const measureCtx = make().getContext('2d');
-
-    const LIFE = 4200;          // ms until a wiped spot is fully fogged again
-    const RADIUS = 150;         // wipe radius in css px
-    const MAX_POINTS = 700;
-    const LINES = ['BE CREATIVE', 'BE INTERESTING'];
-    const FLOAT_TIME = 9000;    // ms a disturbed letter floats before returning
-    const RETURN_TIME = 1800;   // ms for the ease back into place
-    const WAKE_SPEED = 70;      // px/s a moving letter needs to knock a resting one loose
-
-    let W = 0, H = 0, dpr = 1, fs = 0;
-    let points = [];
-    let letters = [];
-    let sprites = {};           // char -> { sharp, blur, w (css px) }
-    let last = null;
-    let visible = true;
-    let userMoved = false;
-    let drag = null;            // { L, ox, oy, px, py } while a letter is held
-    let lastFrame = 0;
-    let mx = 0, my = 0, tx = 0, ty = 0; // eased and target pointer position, -1..1
-
-    const font = (size) => `900 ${size}px Inter, "Helvetica Neue", Arial, sans-serif`;
-    const easeInOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
-
-    // One pre-rendered sprite per distinct character: solid face + stacked dark side walls,
-    // and a blurred copy used for the fogged state
-    function spriteFor(ch) {
-        if (sprites[ch]) return sprites[ch];
-        const size = fs * dpr;
-        measureCtx.font = font(size);
-        const chW = measureCtx.measureText(ch).width;
-        const depth = Math.round(size * 0.16);
-        const pad = Math.round(30 * dpr);
-        const w = Math.ceil(chW + depth + pad * 2);
-        const h = Math.ceil(size * 1.2 + depth + pad * 2);
-
-        const sharp = make(), blur = make();
-        sharp.width = blur.width = w;
-        sharp.height = blur.height = h;
-
-        const ctx = sharp.getContext('2d');
-        ctx.font = font(size);
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const cx = w / 2 - depth * 0.4;
-        const cy = h / 2 - depth * 0.4;
-        for (let d = depth; d >= 1; d--) {
-            const t = d / depth;
-            ctx.fillStyle = `rgb(${Math.round(150 - 110 * t)}, 0, ${Math.round(70 - 45 * t)})`;
-            ctx.fillText(ch, cx + d * 0.8, cy + d * 0.8);
-        }
-        ctx.fillStyle = '#ff2d95'; // solid face, no outline
-        ctx.fillText(ch, cx, cy);
-
-        const bctx = blur.getContext('2d');
-        bctx.filter = `blur(${14 * dpr}px)`;
-        bctx.drawImage(sharp, 0, 0);
-        bctx.filter = 'none';
-
-        sprites[ch] = { sharp, blur, w: chW / dpr };
-        return sprites[ch];
-    }
-
-    function build() {
-        const rect = hero.getBoundingClientRect();
-        W = Math.max(1, Math.round(rect.width));
-        H = Math.max(1, Math.round(rect.height));
-        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        [view, mask, tmp].forEach(c => { c.width = W * dpr; c.height = H * dpr; });
-
-        fs = W < 700 ? W * 0.092 : Math.min(W * 0.072, 140);
-        sprites = {};
-        letters = [];
-
-        // lay each line out centred, one entry per visible character
-        measureCtx.font = font(fs);
-        const lineH = fs * 1.12;
-        LINES.forEach((line, li) => {
-            const total = measureCtx.measureText(line).width;
-            const y = H * 0.4 + li * lineH;
-            [...line].forEach((ch, i) => {
-                if (ch === ' ') return;
-                const before = measureCtx.measureText(line.slice(0, i)).width;
-                const w = measureCtx.measureText(ch).width;
-                const hx = W / 2 - total / 2 + before + w / 2;
-                const sprite = spriteFor(ch);
-                letters.push({
-                    ch, line: li, par: li === 0 ? 14 : 26, phase: li * 2 + i * 0.15,
-                    hx, hy: y, x: hx, y, vx: 0, vy: 0, rot: 0, vr: 0,
-                    k: 1, state: 'home', rs: 0, fx: 0, fy: 0, fr: 0, delay: letters.length * 25, active: 0,
-                    sprite, r: Math.max(sprite.w * 0.46, fs * 0.27), hitR: Math.max(sprite.w * 0.5, fs * 0.32)
-                });
-            });
-        });
-
-        // soft brush sprite
-        const r = RADIUS * dpr;
-        brush.width = brush.height = r * 2;
-        const bctx = brush.getContext('2d');
-        const grad = bctx.createRadialGradient(r, r, 0, r, r, r);
-        grad.addColorStop(0, 'rgba(255,255,255,1)');
-        grad.addColorStop(0.45, 'rgba(255,255,255,0.85)');
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        bctx.fillStyle = grad;
-        bctx.fillRect(0, 0, r * 2, r * 2);
-    }
-
-    // ---- physics ----------------------------------------------------------------------------
-    // drawn position of a letter (includes the pointer parallax/float it has at rest)
-    function drawnPos(L, now) {
-        const t = reduceMotion ? 0 : now;
-        const floatY = Math.sin(t * 0.0009 + L.phase) * 5;
-        return { x: L.x + mx * L.par * L.k, y: L.y + (my * L.par + floatY) * L.k };
-    }
-
-    function letterAt(x, y, now) {
-        for (let i = letters.length - 1; i >= 0; i--) {
-            const L = letters[i];
-            if (L.state === 'return') continue;   // locked while settling back, so it can't be disturbed
-            const p = drawnPos(L, now);
-            if (Math.hypot(x - p.x, y - p.y) <= L.hitR) return L;
-        }
-        return null;
-    }
-
-    function wake(L, now) {
-        if (L.state === 'free') { L.active = now; return; }
-        L.state = 'free';
-        L.vx = L.vy = L.vr = 0;
-        L.active = now;
-    }
-
-    function collide(now) {
-        for (let i = 0; i < letters.length; i++) {
-            for (let j = i + 1; j < letters.length; j++) {
-                const A = letters[i], B = letters[j];
-                const aLive = A.state === 'free', bLive = B.state === 'free';
-                if (A.state === 'return' || B.state === 'return') continue; // returning letters ignore collisions
-                if (!aLive && !bLive) continue;
-                let dx = B.x - A.x, dy = B.y - A.y;
-                let dist = Math.hypot(dx, dy);
-                const minD = A.r + B.r;
-                if (dist >= minD) continue;
-                if (dist < 0.001) { dx = Math.random() - 0.5; dy = Math.random() - 0.5; dist = Math.hypot(dx, dy); }
-                const nx = dx / dist, ny = dy / dist;
-
-                // a moving letter (or the held one) wakes a letter that is at rest or returning
-                const aMove = A.drag || Math.hypot(A.vx, A.vy) > WAKE_SPEED;
-                const bMove = B.drag || Math.hypot(B.vx, B.vy) > WAKE_SPEED;
-                if (!aLive && bMove && minD - dist > 0.5) wake(A, now);
-                else if (!bLive && aMove && minD - dist > 0.5) wake(B, now);
-                if (A.state !== 'free' || B.state !== 'free') continue;
-
-                const invA = A.drag ? 0 : 1, invB = B.drag ? 0 : 1, invSum = invA + invB;
-                if (!invSum) continue;
-                const overlap = minD - dist;
-                A.x -= nx * overlap * invA / invSum; A.y -= ny * overlap * invA / invSum;
-                B.x += nx * overlap * invB / invSum; B.y += ny * overlap * invB / invSum;
-
-                const rvn = (B.vx - A.vx) * nx + (B.vy - A.vy) * ny;
-                if (rvn < 0) {
-                    const imp = -(1 + 0.88) * rvn / invSum;
-                    A.vx -= imp * invA * nx; A.vy -= imp * invA * ny;
-                    B.vx += imp * invB * nx; B.vy += imp * invB * ny;
-                    if (-rvn > 25) {
-                        A.active = B.active = now;
-                        if (!A.drag) A.vr += (Math.random() - 0.5) * 6;
-                        if (!B.drag) B.vr += (Math.random() - 0.5) * 6;
-                    }
-                }
-            }
-        }
-    }
-
-    function step(now) {
-        const dt = Math.min((now - lastFrame) / 1000 || 0.016, 0.033);
-        lastFrame = now;
-
-        // the held letter follows the pointer; its velocity is what it throws with / hits with
-        if (drag) {
-            const L = drag.L;
-            const targetX = Math.min(Math.max(drag.px - drag.ox, L.r), W - L.r);
-            const targetY = Math.min(Math.max(drag.py - drag.oy, L.r), H - L.r);
-            const nx = L.x + (targetX - L.x) * Math.min(1, dt * 28);
-            const ny = L.y + (targetY - L.y) * Math.min(1, dt * 28);
-            const vx = (nx - L.x) / dt, vy = (ny - L.y) / dt;
-            L.vx += (vx - L.vx) * 0.5;
-            L.vy += (vy - L.vy) * 0.5;
-            L.x = nx; L.y = ny;
-            L.rot *= 1 - Math.min(1, dt * 8);
-            L.k = 0;
-            L.active = now;
-        }
-
-        for (const L of letters) {
-            if (L.state !== 'free' || L.drag) continue;
-            L.k += (0 - L.k) * Math.min(1, dt * 6);
-            L.vx *= Math.pow(0.75, dt);
-            L.vy *= Math.pow(0.75, dt);
-            L.vr *= Math.pow(0.7, dt);
-            // keep them drifting instead of coming to rest
-            if (Math.hypot(L.vx, L.vy) < 25) {
-                const a = Math.random() * Math.PI * 2;
-                L.vx += Math.cos(a) * 12; L.vy += Math.sin(a) * 12;
-            }
-            if (Math.abs(L.vr) < 0.3) L.vr += (Math.random() - 0.5) * 0.6;
-            L.x += L.vx * dt;
-            L.y += L.vy * dt;
-            L.rot += L.vr * dt;
-        }
-
-        collide(now);
-
-        for (const L of letters) {
-            if (L.state === 'free') {
-                // bounce off the edges of the hero
-                const r = L.r;
-                if (L.x < r) { L.x = r; L.vx = Math.abs(L.vx) * 0.85; }
-                else if (L.x > W - r) { L.x = W - r; L.vx = -Math.abs(L.vx) * 0.85; }
-                if (L.y < r) { L.y = r; L.vy = Math.abs(L.vy) * 0.85; }
-                else if (L.y > H - r) { L.y = H - r; L.vy = -Math.abs(L.vy) * 0.85; }
-
-                // 9 seconds after it was last disturbed, a letter heads home
-                if (!L.drag && now - L.active > FLOAT_TIME) {
-                    L.state = 'return';
-                    L.rs = now;
-                    L.fx = L.x; L.fy = L.y;
-                    L.fr = ((L.rot + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
-                }
-            } else if (L.state === 'return') {
-                const p = Math.min(Math.max((now - L.rs - L.delay) / RETURN_TIME, 0), 1);
-                const e = easeInOut(p);
-                L.x = L.fx + (L.hx - L.fx) * e;
-                L.y = L.fy + (L.hy - L.fy) * e;
-                L.rot = L.fr * (1 - e);
-                L.k = e;
-                if (p >= 1) {
-                    L.state = 'home';
-                    L.x = L.hx; L.y = L.hy; L.rot = 0; L.k = 1;
-                    L.vx = L.vy = L.vr = 0;
-                }
-            }
-        }
-    }
-
-    // ---- drawing ----------------------------------------------------------------------------
-    function drawLetter(ctx, L, img, now) {
-        const t = reduceMotion ? 0 : now;
-        const k = L.k;
-        const floatY = Math.sin(t * 0.0009 + L.phase) * 5;
-        ctx.save();
-        ctx.translate((L.x + mx * L.par * k) * dpr, (L.y + (my * L.par + floatY) * k) * dpr);
-        ctx.rotate(L.rot + mx * 0.04 * k);
-        ctx.transform(1, my * 0.04 * k, -mx * 0.1 * k, 1 - Math.abs(my) * 0.04 * k, 0, 0);
-        ctx.drawImage(img, -img.width / 2, -img.height / 2);
-        ctx.restore();
-    }
-
-    function render(now) {
-        // ease the pointer
-        mx += (tx - mx) * 0.08;
-        my += (ty - my) * 0.08;
-        if (grid && !reduceMotion) grid.style.translate = `${(-mx * 14).toFixed(1)}px ${(-my * 14).toFixed(1)}px`;
-
-        step(now);
-
-        // age out and paint the wipe mask
-        points = points.filter(p => now - p.t < LIFE);
-        mctx.clearRect(0, 0, mask.width, mask.height);
-        const r = RADIUS * dpr;
-        for (const p of points) {
-            const age = (now - p.t) / LIFE;
-            mctx.globalAlpha = Math.pow(1 - age, 1.4);
-            mctx.drawImage(brush, p.x * dpr - r, p.y * dpr - r);
-        }
-        mctx.globalAlpha = 1;
-
-        // sharp letters, only where the mask is
-        tctx.globalCompositeOperation = 'source-over';
-        tctx.clearRect(0, 0, tmp.width, tmp.height);
-        letters.forEach(L => drawLetter(tctx, L, L.sprite.sharp, now));
-        tctx.globalCompositeOperation = 'destination-in';
-        tctx.drawImage(mask, 0, 0);
-
-        // fog = haze + blurred letters, holes punched where wiped, then the sharp letters
-        vctx.globalCompositeOperation = 'source-over';
-        vctx.clearRect(0, 0, view.width, view.height);
-        vctx.fillStyle = 'rgba(10, 0, 8, 0.62)';
-        vctx.fillRect(0, 0, view.width, view.height);
-        vctx.globalAlpha = 0.5;
-        letters.forEach(L => drawLetter(vctx, L, L.sprite.blur, now));
-        vctx.globalAlpha = 1;
-        vctx.globalCompositeOperation = 'destination-out';
-        vctx.drawImage(mask, 0, 0);
-        vctx.globalCompositeOperation = 'source-over';
-        vctx.drawImage(tmp, 0, 0);
-
-        // thrown letters are fully visible; they dissolve back into the fog as they return home
-        letters.forEach(L => {
-            if (L.k >= 0.999) return;
-            vctx.globalAlpha = 1 - L.k;
-            drawLetter(vctx, L, L.sprite.sharp, now);
-        });
-        vctx.globalAlpha = 1;
-    }
-
-    function loop(now) {
-        if (!visible) return;
-        render(now);
-        requestAnimationFrame(loop);
-    }
-
-    // ---- pointer ----------------------------------------------------------------------------
-    function addPoint(x, y, t) {
-        points.push({ x, y, t });
-        if (points.length > MAX_POINTS) points.shift();
-    }
-
-    function wipeTo(x, y, t) {
-        if (last) {
-            const dx = x - last.x, dy = y - last.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist < 12) return;
-            const steps = Math.floor(dist / 12);
-            for (let i = 1; i <= steps; i++) {
-                addPoint(last.x + (dx * i) / steps, last.y + (dy * i) / steps, t);
-            }
-        } else {
-            addPoint(x, y, t);
-        }
-        last = { x, y };
-    }
-
-    hero.addEventListener('pointermove', (e) => {
-        const rect = view.getBoundingClientRect();
-        const x = e.clientX - rect.left, y = e.clientY - rect.top;
-        userMoved = true;
-        tx = Math.max(-1, Math.min(1, (x / rect.width - 0.5) * 2));
-        ty = Math.max(-1, Math.min(1, (y / rect.height - 0.5) * 2));
-        wipeTo(x, y, performance.now());
-        if (drag) {
-            drag.px = x; drag.py = y;
-        } else if (e.pointerType === 'mouse') {
-            hero.style.cursor = letterAt(x, y, performance.now()) ? 'grab' : '';
-        }
-    });
-    hero.addEventListener('pointerleave', () => {
-        last = null;
-        if (!drag) { tx = ty = 0; hero.style.cursor = ''; }
-    });
-
-    // grab a letter
-    hero.addEventListener('pointerdown', (e) => {
-        const rect = view.getBoundingClientRect();
-        const x = e.clientX - rect.left, y = e.clientY - rect.top;
-        const now = performance.now();
-        const L = letterAt(x, y, now);
-        if (!L) return;
-        const p = drawnPos(L, now);
-        L.x = p.x; L.y = p.y; L.k = 0;      // keep it exactly where it is drawn
-        L.state = 'free'; L.drag = true; L.vx = L.vy = L.vr = 0; L.active = now;
-        drag = { L, ox: x - L.x, oy: y - L.y, px: x, py: y };
-        hero.style.cursor = 'grabbing';
-        try { hero.setPointerCapture(e.pointerId); } catch (err) { /* not capturable */ }
-    });
-    const release = () => {
-        if (!drag) return;
-        const L = drag.L;
-        const sp = Math.hypot(L.vx, L.vy);
-        if (sp > 2200) { L.vx *= 2200 / sp; L.vy *= 2200 / sp; }   // cap the throw
-        L.vr = (Math.random() - 0.5) * 8;
-        L.drag = false;
-        L.active = performance.now();
-        drag = null;
-        hero.style.cursor = '';
-    };
-    hero.addEventListener('pointerup', release);
-    hero.addEventListener('pointercancel', release);
-    // on touch screens, stop the page from scrolling when the finger starts on a letter
-    hero.addEventListener('touchstart', (e) => {
-        const t = e.touches[0];
-        const rect = view.getBoundingClientRect();
-        if (t && letterAt(t.clientX - rect.left, t.clientY - rect.top, performance.now())) e.preventDefault();
-    }, { passive: false });
-
-    new IntersectionObserver((entries) => {
-        const was = visible;
-        visible = entries[0].isIntersecting;
-        if (visible && !was) requestAnimationFrame(loop);
-    }).observe(hero);
-
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => { points = []; drag = null; build(); }, 150);
-    });
-
-    // A short automatic sweep once the intro is gone, so visitors discover the effect
-    function demoSweep() {
-        if (userMoved) return;
-        const start = performance.now();
-        const stepSweep = (now) => {
-            if (userMoved) return;
-            const s = Math.min((now - start) / 1800, 1);
-            const rect = view.getBoundingClientRect();
-            wipeTo(rect.width * (0.2 + 0.6 * s), rect.height * (0.45 + 0.1 * Math.sin(s * Math.PI * 3)), now);
-            if (s < 1) requestAnimationFrame(stepSweep); else last = null;
-        };
-        requestAnimationFrame(stepSweep);
-    }
-    const waitForIntro = () => {
-        if (document.body.classList.contains('is-loading')) {
-            setTimeout(waitForIntro, 300);
-        } else {
-            setTimeout(demoSweep, 500);
-        }
-    };
-    waitForIntro();
-
-    // The headline font must be loaded before the letters are rasterised
-    const start = () => { build(); requestAnimationFrame(loop); };
-    const ready = document.fonts && document.fonts.load ? document.fonts.load('900 100px Inter') : Promise.resolve();
-    ready.then(start, start);
-}
-
-// "Hello, I'm Jenny" detaches from the hero and glides to the About title as you scroll.
-// A fixed copy follows an interpolated path (hero spot -> About title spot) scrubbed to the
-// scroll; once it reaches the title it hands off to the real, identically styled heading.
+// "Hello, I'm Jenny" (the line under PORTFOLIO) detaches from the hero and slides down to the
+// About heading as you scroll. A fixed copy follows an interpolated path (hero spot -> About
+// heading spot) scrubbed to the scroll, shrinking as it goes; once it reaches the heading it
+// hands off to the real, identically styled heading.
 function initTitleTravel() {
-    const src = document.querySelector('.hero-text');
+    const src = document.querySelector('.hero-title');
     const dst = document.getElementById('aboutTitle');
-    const hero = document.getElementById('home');
-    if (!src || !dst || !hero) return;
+    if (!src || !dst) return;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         dst.classList.add('landed');
@@ -1478,13 +1150,24 @@ function initTitleTravel() {
     document.body.appendChild(clone);
     src.style.visibility = 'hidden';
 
+    const cloneLine = clone.querySelector('.title-line');
     const cloneName = clone.querySelector('.title-name');
-    let sx = 0, sy = 0, tx = 0, ty = 0, endScroll = 1, nameStart = 0, nameEnd = 0;
+    let sx = 0, sy = 0, tx = 0, ty = 0, endScroll = 1;
+    let lineStart = 0, lineEnd = 0, nameStart = 0, nameEnd = 0;
 
-    // sx/sy: where the text sits in the hero; tx/ty: where it must be (viewport coords) at endScroll
+    // position of an element in the document, ignoring transforms and running animations
+    const docPos = (el) => {
+        let x = 0, y = 0;
+        for (let n = el; n; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; }
+        return { x, y };
+    };
+    const px = (el, prop) => parseFloat(getComputedStyle(el)[prop]);
+
+    // sx/sy: where the line sits in the hero; tx/ty: where it must be (viewport coords) at endScroll
     function measure() {
-        sx = hero.offsetLeft + src.offsetLeft;
-        sy = hero.offsetTop + src.offsetTop;
+        const start = docPos(src);
+        sx = start.x;
+        sy = start.y;
 
         const a = dst.firstElementChild.getBoundingClientRect();
         const tops = Array.from(dst.children).map(el => el.getBoundingClientRect().top);
@@ -1492,15 +1175,19 @@ function initTitleTravel() {
         endScroll = Math.max(docTop - window.innerHeight * 0.3, 300);
         tx = a.left;
         ty = docTop - endScroll;
-        // Jenny starts at her hero size and ends at the size of the other word
-        nameStart = parseFloat(getComputedStyle(src.querySelector('.title-name')).fontSize);
-        nameEnd = parseFloat(getComputedStyle(dst.querySelector('.title-name')).fontSize);
+
+        // both words shrink from their hero size to the About heading size
+        lineStart = px(src.querySelector('.title-line'), 'fontSize');
+        nameStart = px(src.querySelector('.title-name'), 'fontSize');
+        lineEnd = px(dst.querySelector('.title-line'), 'fontSize');
+        nameEnd = px(dst.querySelector('.title-name'), 'fontSize');
         return endScroll;
     }
 
     function apply(p) {
         const landed = p >= 0.999;
         gsap.set(clone, { x: sx + (tx - sx) * p, y: sy + (ty - sy) * p });
+        cloneLine.style.fontSize = `${lineStart + (lineEnd - lineStart) * p}px`;
         cloneName.style.fontSize = `${nameStart + (nameEnd - nameStart) * p}px`;
         clone.style.visibility = landed ? 'hidden' : 'visible';
         dst.classList.toggle('landed', landed);
@@ -1517,9 +1204,52 @@ function initTitleTravel() {
     measure();
     apply(0);
 
-    // the title's width changes once the web fonts load, so re-measure then
+    // the heading's width changes once the web fonts load, so re-measure then
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
     window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+// Hovering (or tapping) PORTFOLIO in the hero pops up a small greeting next to the cursor.
+// The three messages rotate, so each new hover shows the next one.
+function initJennyGreeting() {
+    const name = document.querySelector('.hero-portfolio');
+    if (!name) return;
+
+    const messages = ['Lovely to see you', 'Welcome to my portfolio', 'I\u2019d love to work with you'];
+    let next = 0;
+    let hideTimer = null;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'jenny-greeting';
+    bubble.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bubble);
+
+    gsap.set(bubble, { xPercent: 0, scale: 0.6, transformOrigin: '0% 100%' });
+    const moveX = gsap.quickTo(bubble, 'x', { duration: 0.25, ease: 'power3.out' });
+    const moveY = gsap.quickTo(bubble, 'y', { duration: 0.25, ease: 'power3.out' });
+    // keep the bubble on screen, e.g. when tapping near the right edge of a phone
+    const bx = (e) => Math.max(8, Math.min(e.clientX + 16, innerWidth - bubble.offsetWidth - 8));
+    const by = (e) => Math.max(8, e.clientY - 44);
+    const place = (e) => { moveX(bx(e)); moveY(by(e)); };
+
+    const show = (e) => {
+        clearTimeout(hideTimer);
+        bubble.textContent = messages[next];
+        next = (next + 1) % messages.length;
+        gsap.set(bubble, { x: bx(e), y: by(e) });
+        gsap.killTweensOf(bubble, 'opacity,scale');
+        gsap.to(bubble, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2.2)' });
+        // a finger leaves no hover, so let the bubble fade by itself on touch screens
+        if (e.pointerType === 'touch') hideTimer = setTimeout(hide, 1600);
+    };
+    const hide = () => {
+        gsap.killTweensOf(bubble, 'opacity,scale');
+        gsap.to(bubble, { opacity: 0, scale: 0.6, duration: 0.2, ease: 'power2.in' });
+    };
+
+    name.addEventListener('pointerenter', show);
+    name.addEventListener('pointermove', place);
+    name.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') hide(); });
 }
 
 // Achievement cards rise in one after another as the grid scrolls into view

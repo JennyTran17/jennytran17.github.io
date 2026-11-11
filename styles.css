@@ -1936,7 +1936,7 @@ body.is-loading {
     will-change: transform;
 }
 
-/* Achievements & Certificates: one card per year, two per row */
+/* Achievements & Highlights: one card per year, two per row */
 .achievements {
     padding: 8rem 0;
     background: var(--bg-primary);
@@ -2145,4 +2145,209 @@ body.is-loading {
     .look-pad {
         display: none;
     }
+}
+
+/* Download CV link under the hero greeting */
+.hero-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.6rem;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hero-cv i {
+    transition: transform 0.3s ease;
+}
+
+.hero-cv:hover,
+.hero-cv:focus-visible {
+    background: var(--gradient-primary);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-2px);
+}
+
+.hero-cv:hover i,
+.hero-cv:focus-visible i {
+    transform: translateY(2px);
+}
+
+/* Qualification: the certificates, three per row (two on tablets, one on phones) */
+.qualification {
+    padding: 0 0 8rem;
+    background: var(--bg-primary);
+}
+
+.qual-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* a short last row sits in the middle */
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 4rem auto 0;
+}
+
+.qual-card {
+    flex: 0 1 calc((100% - 4rem) / 3);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qual-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg), var(--neon-glow);
+}
+
+/* every certificate gets the same frame so the cards line up, whatever the image proportions */
+.qual-img {
+    aspect-ratio: 484 / 374;
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.qual-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.qual-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.1rem 1.25rem 1.3rem;
+}
+
+.qual-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--primary-color);
+}
+
+.qual-title {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.qual-issuer {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+    .qual-card {
+        flex-basis: calc((100% - 2rem) / 2);
+    }
+}
+
+@media (max-width: 560px) {
+    .qualification {
+        padding-bottom: 5rem;
+    }
+    .qual-card {
+        flex-basis: 100%;
+    }
+}
+
+/* Project details: CV-style intro, bullet points and an optional screenshot */
+.project-panel-inner .project-lead {
+    color: var(--text-primary);
+}
+
+.project-points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    counter-reset: point;
+}
+
+.project-points li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.project-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary-color);
+}
+
+.project-points strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* numbered list: pink mono numbers instead of dots */
+.project-points--num li {
+    counter-increment: point;
+    padding-left: 1.6rem;
+}
+
+.project-points--num li::before {
+    content: counter(point) '.';
+    top: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.9;
+    color: var(--primary-color);
+}
+
+.project-media {
+    margin: 0.4rem 0 0;
+    max-width: 560px;
+}
+
+.project-shot {
+    display: block;
+    width: 100%;
+    height: auto;           /* width/height attributes reserve the right box before the image loads */
+    background: #000;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.project-media figcaption {
+    margin-top: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
 }

@@ -69,6 +69,10 @@
                     <span class="title-line cyber-text">Hello, I'm</span>
                     <span class="title-name">Jenny</span>
                 </h1>
+                <a class="hero-cv" href="download/NgocQuynhHuongTranCV.pdf" download="Huong-Tran-CV.pdf" aria-label="Download my CV (PDF)">
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                    Download CV
+                </a>
             </div>
         </div>
         <div class="look-pad" id="lookPad" role="group" tabindex="0" title="Drag to look around" aria-label="Look around the cube. Drag the knob, or use the arrow keys.">
@@ -192,6 +196,15 @@
                 </div>
                 <div class="tl-item tl-up">
                     <div class="tl-card">
+                        <span class="tl-date">June 2024 - Present</span>
+                        <h3 class="tl-role">E-Commerce Product Coordinator at Burgess Department Store</h3>
+                        <p class="tl-desc">Managing website content updates so product listings and promotions stay accurate, optimising images and layouts to improve the site's visual appeal and functionality, and monitoring website performance to suggest improvements for user experience.</p>
+                        <div class="tl-tech"><span class="tech-tag">E-Commerce</span><span class="tech-tag">Web Content</span><span class="tech-tag">UX</span></div>
+                    </div>
+                    <button type="button" class="tl-dot" aria-label="E-Commerce Product Coordinator at Burgess Department Store"></button>
+                </div>
+                <div class="tl-item tl-down">
+                    <div class="tl-card">
                         <span class="tl-date">03 - 05 October 2025</span>
                         <h3 class="tl-role">Nasa Space Apps Challenge - Hackathon</h3>
                         <p class="tl-desc">Participated in teams for a 48 Hours coding sessions and create Unity application about Meteor Impact using NASA real time resources.</p>
@@ -199,7 +212,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Nasa Space Apps Challenge - Hackathon"></button>
                 </div>
-                <div class="tl-item tl-down">
+                <div class="tl-item tl-up">
                     <div class="tl-card">
                         <span class="tl-date">03 June - 29 August 2025</span>
                         <h3 class="tl-role">Summer Internship in Ericsson</h3>
@@ -208,7 +221,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Summer Internship in Ericsson"></button>
                 </div>
-                <div class="tl-item tl-up">
+                <div class="tl-item tl-down">
                     <div class="tl-card">
                         <span class="tl-date">January - March 2025</span>
                         <h3 class="tl-role">Game Fleadh Competition</h3>
@@ -217,7 +230,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Game Fleadh Competition"></button>
                 </div>
-                <div class="tl-item tl-down">
+                <div class="tl-item tl-up">
                     <div class="tl-card">
                         <span class="tl-date">May 2024</span>
                         <h3 class="tl-role">Pro-a-thon Competition</h3>
@@ -226,7 +239,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Pro-a-thon Competition"></button>
                 </div>
-                <div class="tl-item tl-up">
+                <div class="tl-item tl-down">
                     <div class="tl-card">
                         <span class="tl-date">January - August 2024</span>
                         <h3 class="tl-role">Part Time Coder and Animator at InfiniteKidz StartUp</h3>
@@ -235,7 +248,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Part Time Coder and Animator at InfiniteKidz StartUp"></button>
                 </div>
-                <div class="tl-item tl-down">
+                <div class="tl-item tl-up">
                     <div class="tl-card">
                         <span class="tl-date">25 November 2023</span>
                         <h3 class="tl-role">Galway Game Jam</h3>
@@ -244,7 +257,7 @@
                     </div>
                     <button type="button" class="tl-dot" aria-label="Galway Game Jam"></button>
                 </div>
-                <div class="tl-item tl-up">
+                <div class="tl-item tl-down">
                     <div class="tl-card">
                         <span class="tl-date">July - August 2022</span>
                         <h3 class="tl-role">Infuse & Hackathon Program</h3>
@@ -314,7 +327,14 @@
                     </div>
                     <aside class="project-panel" id="project-panel-1" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A runtime security firewall for autonomous AI agents. It intercepts every system call before it executes, checks it against the user’s original prompt intent, and shows the decision flow in a real-time 3D interface, with a built-in red-team agent that tests it.</p>
+                            <p class="project-intro">Traditional security tools monitor network ports and user endpoints, but they have zero visibility into what autonomous AI agents are doing internally. An AI agent can browse your environment, write code, and call system APIs, and there is no way to tell if it's executing a legitimate task or has been hijacked via prompt injection.</p>
+                            <p class="project-lead">This project solves that gap. It's a runtime security firewall for AI agents that:</p>
+                            <ol class="project-points project-points--num">
+                                <li>Intercepts every system call (file I/O, network, subprocess) an AI agent makes before it executes</li>
+                                <li>Validates each call against the user's original prompt intent, blocking anything unauthorized</li>
+                                <li>Visualizes the entire decision flow in a real-time 3D frontend</li>
+                                <li>Tests itself with a built-in Red Team Agent that automatically attacks the firewall to prove it works</li>
+                            </ol>
                             <div class="project-tags"><span class="tech-tag">Python</span><span class="tech-tag">JavaScript</span><span class="tech-tag">HTML</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/AI_Security" class="modal-link" target="_blank" rel="noopener">
@@ -325,7 +345,7 @@
                         </div>
                     </aside>
                 </div>
-                <div class="project-card" data-tech="Python,Shell,Makefile,Dockerfile">
+                <div class="project-card" data-tech="Python,FastAPI,InfluxDB,Prometheus,Grafana,Docker">
                     <div class="project-head">
                     <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-2">
                         <span class="project-title">Offshore Wind Guardian</span>
@@ -334,8 +354,18 @@
                     </div>
                     <aside class="project-panel" id="project-panel-2" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>AI-powered monitoring system for offshore wind farms with BME280 sensors, 6-axis IMU, and hydrophone acoustic monitoring.</p>
-                            <div class="project-tags"><span class="tech-tag">Python</span><span class="tech-tag">Shell</span><span class="tech-tag">Makefile</span><span class="tech-tag">Dockerfile</span></div>
+                            <p class="project-intro">AI-powered monitoring system for offshore wind farms with BME280 environmental sensors, 6-axis IMU, and hydrophone acoustic monitoring. This project was researched and implemented by a small team of five members for the CleanerGrid competition.</p>
+                            <ul class="project-points">
+                                <li><strong>Backend:</strong> Python FastAPI with InfluxDB and Prometheus</li>
+                                <li><strong>Monitoring:</strong> Grafana dashboards with Prometheus</li>
+                                <li><strong>Sensors:</strong> BME280 (temperature, humidity, pressure), 6-axis IMU (accelerometer, gyroscope), hydrophone (underwater acoustic monitoring via USB sound card)</li>
+                                <li><strong>Containerization:</strong> Podman/Docker</li>
+                            </ul>
+                            <figure class="project-media">
+                                <img class="project-shot" src="images/offshore.jpg" alt="Screenshot of the Offshore Wind Guardian Grafana dashboard showing temperature, humidity, pressure and AI anomaly status panels" width="736" height="480" loading="lazy">
+                                <figcaption>Offshore Wind Guardian: Grafana monitoring dashboard</figcaption>
+                            </figure>
+                            <div class="project-tags"><span class="tech-tag">Python</span><span class="tech-tag">FastAPI</span><span class="tech-tag">InfluxDB</span><span class="tech-tag">Prometheus</span><span class="tech-tag">Grafana</span><span class="tech-tag">Docker</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/Offshore-Wind-Guardian" class="modal-link" target="_blank" rel="noopener">
                                     <i class="fab fa-github"></i>
@@ -345,7 +375,7 @@
                         </div>
                     </aside>
                 </div>
-                <div class="project-card" data-tech="Javascript,Typescript,HTML,CSS">
+                <div class="project-card" data-tech="JavaScript,TypeScript,HTML,CSS">
                     <div class="project-head">
                     <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-3">
                         <span class="project-title">Grassland Resilience</span>
@@ -354,8 +384,17 @@
                     </div>
                     <aside class="project-panel" id="project-panel-3" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A web application that monitors grassland health across Ireland using NASA satellite data.</p>
-                            <div class="project-tags"><span class="tech-tag">Javascript</span><span class="tech-tag">Typescript</span><span class="tech-tag">HTML</span><span class="tech-tag">CSS</span></div>
+                            <p class="project-intro">A complete web application that monitors grassland health across Ireland using NASA satellite data:</p>
+                            <ul class="project-points">
+                                <li><strong>Frontend:</strong> Interactive map with layer controls, field management, and user authentication</li>
+                                <li><strong>Backend:</strong> NASA satellite data API with real-time processing</li>
+                                <li><strong>Data sources:</strong> NDVI Anomaly, Soil Moisture, Active Fires, Risk Assessment</li>
+                            </ul>
+                            <figure class="project-media">
+                                <img class="project-shot" src="images/grassland.jpg" alt="Screenshot of the Grassland Resilience Navigator: an interactive map of Ireland with NDVI anomaly and soil moisture layers and a risk dashboard" width="1280" height="720" loading="lazy">
+                                <figcaption>Grassland Resilience Navigator: interactive map and risk dashboard</figcaption>
+                            </figure>
+                            <div class="project-tags"><span class="tech-tag">JavaScript</span><span class="tech-tag">TypeScript</span><span class="tech-tag">HTML</span><span class="tech-tag">CSS</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/GrasslandResilience" class="modal-link" target="_blank" rel="noopener">
                                     <i class="fab fa-github"></i>
@@ -374,7 +413,11 @@
                     </div>
                     <aside class="project-panel" id="project-panel-4" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A short game where a broken robot is trapped on an abandoned planet and must repair its spaceship to escape. Won Best in Game Play at Game Fleadh 2025.</p>
+                            <p class="project-intro">Made for Game Fleadh 2025: a short game where a broken robot is trapped on an abandoned planet in isolation, and its goal is to find ways to escape by repairing its spaceship and fleeing the planet into the void.</p>
+                            <ul class="project-points">
+                                <li><strong>Award:</strong> Won Best in Game Play at Game Fleadh 2025 as Team Evolution</li>
+                                <li><strong>Availability:</strong> Currently on itch.io</li>
+                            </ul>
                             <div class="project-tags"><span class="tech-tag">Unity</span><span class="tech-tag">C#</span><span class="tech-tag">ShaderLab</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/RoboQuest_GameFleadh25" class="modal-link" target="_blank" rel="noopener">
@@ -385,17 +428,21 @@
                         </div>
                     </aside>
                 </div>
-                <div class="project-card" data-tech="C#,Shaderlab,Python">
+                <div class="project-card" data-tech="Unity,C#,ShaderLab,Python">
                     <div class="project-head">
                     <button type="button" class="project-main" aria-expanded="false" aria-controls="project-panel-5">
-                        <span class="project-title">Meteor Impact Simulation</span>
+                        <span class="project-title">Meteor Impact Simulator</span>
                     </button>
-                    <a href="https://github.com/JennyTran17/MeteorImpactSimulator" class="project-link" target="_blank" rel="noopener" aria-label="Open Meteor Impact Simulation source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                    <a href="https://github.com/JennyTran17/MeteorImpactSimulator" class="project-link" target="_blank" rel="noopener" aria-label="Open Meteor Impact Simulator source code on GitHub"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
                     </div>
                     <aside class="project-panel" id="project-panel-5" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A Unity application simulating meteor impacts using real-time NASA data resources.</p>
-                            <div class="project-tags"><span class="tech-tag">C#</span><span class="tech-tag">Shaderlab</span><span class="tech-tag">Python</span></div>
+                            <p class="project-intro">Built for the NASA Space Apps Hackathon 2025, primarily in the Unity game engine to craft intuitive, engaging 3D environments. The team used Python and other backend tools to handle precise physics and orbital mechanics calculations, ensuring the experience is both fun and scientifically sound.</p>
+                            <ul class="project-points">
+                                <li><strong>Mission:</strong> Demystify meteorology and space science, making it easy, memorable, and fun to understand</li>
+                                <li><strong>Recognition:</strong> Received a Recognition Certificate from the NASA Space Apps Hackathon</li>
+                            </ul>
+                            <div class="project-tags"><span class="tech-tag">Unity</span><span class="tech-tag">C#</span><span class="tech-tag">ShaderLab</span><span class="tech-tag">Python</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/MeteorImpactSimulator" class="modal-link" target="_blank" rel="noopener">
                                     <i class="fab fa-github"></i>
@@ -414,7 +461,7 @@
                     </div>
                     <aside class="project-panel" id="project-panel-6" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A prototype voice assistant with speech interaction and template-based responses, with a modular design for future expansion.</p>
+                            <p class="project-intro">A prototype voice assistant built to demonstrate speech interaction and template-based responses, with a modular design for future expansion into more advanced features.</p>
                             <div class="project-tags"><span class="tech-tag">Python</span><span class="tech-tag">Flask</span><span class="tech-tag">PostgreSQL</span><span class="tech-tag">OpenAI</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/VoiceAssistant" class="modal-link" target="_blank" rel="noopener">
@@ -434,7 +481,7 @@
                     </div>
                     <aside class="project-panel" id="project-panel-7" aria-hidden="true">
                         <div class="project-panel-inner">
-                            <p>A full-stack weather notification app with weather API, Spring Boot, Kafka, and AWS.</p>
+                            <p class="project-intro">A full-stack weather notification app built from Spring Boot microservices, using a weather API, Kafka messaging, Docker Compose and AWS.</p>
                             <div class="project-tags"><span class="tech-tag">Spring Boot</span><span class="tech-tag">Java</span><span class="tech-tag">Kafka</span><span class="tech-tag">AWS</span></div>
                             <div class="modal-links">
                                 <a href="https://github.com/JennyTran17/weather-app-suite" class="modal-link" target="_blank" rel="noopener">
@@ -449,10 +496,10 @@
         </div>
     </section>
 
-    <!-- Achievements & Certificates Section -->
+    <!-- Achievements & Highlights Section -->
     <section id="achievements" class="achievements">
         <div class="container">
-            <h2 class="section-title">Achievements &amp; Certificates</h2>
+            <h2 class="section-title">Achievements &amp; Highlights</h2>
             <div class="ach-grid">
                 <article class="ach-card">
                     <header class="ach-head">
@@ -570,6 +617,65 @@
                         </li>
                     </ul>
                 </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Qualification Section -->
+    <section id="qualification" class="qualification">
+        <div class="container">
+            <h2 class="section-title">Qualification</h2>
+            <div class="qual-grid">
+                <figure class="qual-card">
+                    <div class="qual-img">
+                        <img src="images/datacience.jpg" alt="Certificate of Completion: Applied Data Science Lab, WorldQuant University, May 2026" width="484" height="374" loading="lazy">
+                    </div>
+                    <figcaption class="qual-caption">
+                        <span class="qual-date">May 2026</span>
+                        <h3 class="qual-title">Applied Data Science Lab</h3>
+                        <p class="qual-issuer">WorldQuant University</p>
+                    </figcaption>
+                </figure>
+                <figure class="qual-card">
+                    <div class="qual-img">
+                        <img src="images/cleanergrid.jpg" alt="CleanerGrid Certificate of Achievement from EirGrid for the Opportunities and Challenges in Accelerating Offshore Wind Potential project, March 2026" width="487" height="337" loading="lazy">
+                    </div>
+                    <figcaption class="qual-caption">
+                        <span class="qual-date">Mar 2026</span>
+                        <h3 class="qual-title">CleanerGrid 2026: Offshore Wind Potential</h3>
+                        <p class="qual-issuer">EirGrid</p>
+                    </figcaption>
+                </figure>
+                <figure class="qual-card">
+                    <div class="qual-img">
+                        <img src="images/springboot.jpg" alt="Certificate of Completion: Spring and Spring Boot, March 2026" width="484" height="374" loading="lazy">
+                    </div>
+                    <figcaption class="qual-caption">
+                        <span class="qual-date">Mar 2026</span>
+                        <h3 class="qual-title">Spring and Spring Boot</h3>
+                        <p class="qual-issuer">Ericsson</p>
+                    </figcaption>
+                </figure>
+                <figure class="qual-card">
+                    <div class="qual-img">
+                        <img src="images/oracleJava.jpg" alt="Oracle Certified Foundations Associate certificate, Java Certified Foundations Associate, October 2025" width="484" height="374" loading="lazy">
+                    </div>
+                    <figcaption class="qual-caption">
+                        <span class="qual-date">Oct 2025</span>
+                        <h3 class="qual-title">Java Certified Foundations Associate</h3>
+                        <p class="qual-issuer">Oracle University</p>
+                    </figcaption>
+                </figure>
+                <figure class="qual-card">
+                    <div class="qual-img">
+                        <img src="images/ml.jpg" alt="Certificate of Completion: Beginner Machine Learning, July 2025" width="484" height="374" loading="lazy">
+                    </div>
+                    <figcaption class="qual-caption">
+                        <span class="qual-date">Jul 2025</span>
+                        <h3 class="qual-title">Beginner Machine Learning</h3>
+                        <p class="qual-issuer">Ericsson</p>
+                    </figcaption>
+                </figure>
             </div>
         </div>
     </section>

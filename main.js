@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initJennyGreeting();
     initSkillsProgress();
     initAchievements();
+    initQualification();
     initSkillsTitleReveal();
     initProjectCards();
     initContactForm();
@@ -1264,5 +1265,20 @@ function initAchievements() {
         stagger: 0.12,
         clearProps: 'transform,opacity',   // hand control back to the CSS hover lift
         scrollTrigger: { trigger: '.ach-grid', start: 'top 85%', once: true }
+    });
+}
+
+// Certificate cards rise in one after another as the grid scrolls into view
+function initQualification() {
+    const cards = document.querySelectorAll('.qual-card');
+    if (!cards.length) return;
+    gsap.from(cards, {
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.12,
+        clearProps: 'transform,opacity', // hand control back to the CSS hover lift
+        scrollTrigger: { trigger: '.qual-grid', start: 'top 85%', once: true }
     });
 }
